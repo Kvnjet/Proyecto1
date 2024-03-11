@@ -594,33 +594,56 @@ public:
     void borrarEnPosicion(int pos);
     void mostrar() const;
     int largoLista() const;
-    void insertarInventario(ListaSimplePas& listaSimplePasillos, ListaDobleProPasillos& listaSimpleProductos, int codPasillo, int codProducto, ListaCircularDMarcasProductos& marca, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta);
+    void InsertarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas, ListaCircularDMarcasProductos&Marcas);
+    bool listaInventarioRepetido(int codInventario) const;
 
 private:
     pnodoInventario primero;
 };
 
-void ListaDobleInventario::insertarInventario(ListaSimplePas& listaSimplePasillos,  ListaDobleProPasillos&listaSimpleProductos, int codPasillo, int codProducto, ListaCircularDMarcasProductos& marca, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta) {
+void ListaDobleInventario::InsertarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas, ListaCircularDMarcasProductos& Marcas) {
     // Validar si el codPasillo existe en la lista simple de pasillos
-    if (listaSimplePasillos.pasilloRepetido(codPasillo)==false) {
+    if (ListaPasillo.pasilloRepetido(codPasillo)==false) {
         cout << "El pasillo no existe en la lista simple de pasillos." << endl;
+        return;
     }
 
-    // Validar si el codProducto existe en la lista simple de productos
-    if (listaSimpleProductos.productoRepetido(codProducto)==false) {
-        cout << "El producto no existe en la lista simple de productos." << endl;
+    // Validar si el codProducto existe en la lista doble de productos de pasillo
+    if (ProductosPas.productoRepetido(codProducto)==false) {
+        cout << "El producto no existe en la lista doble de productos." << endl;
+        return;
     }
 
-    // Validar si el codMarca no está repetido en la lista doble de inventario
-    if (marca.marcaRepetida(codMarca)==false) {
-        cout << "El código de marca no existe en la lista doble de inventario." << endl;
+    // Validar si el codMarca existe en la lista circular de marcas de productos
+    if (!Marcas.marcaRepetida(codMarca)) {
+        cout << "El código de marca no existe en la lista circular de marcas de productos." << endl;
+        return;
     }
-    if (marca.marcaRepetida(codMarca) == true && listaSimpleProductos.productoRepetido(codProducto) == true && listaSimplePasillos.pasilloRepetido(codPasillo) == true) {
 
-        // Insertar en la lista doble de inventario después de las validaciones
-        insertarAlInicio(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
-        cout << "Producto insertado en el inventario exitosamente." << endl;
+    // Validar si el codInventario no está repetido en la lista doble de inventario
+    if (listaInventarioRepetido(codInventario)) {
+        cout << "El código de inventario ya existe en la lista doble de inventario." << endl;
+        return;
     }
+
+    // Insertar en la lista doble de inventario después de las validaciones
+    insertarAlInicio(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+    cout << "Producto insertado en el inventario exitosamente." << endl;
+}
+
+bool ListaDobleInventario::listaInventarioRepetido(int codInventario) const {
+    pnodoInventario aux = primero;
+
+    while (aux != nullptr) {
+        if (aux->codInventario == codInventario) {
+            // El código de inventario ya existe en la lista
+            return true;
+        }
+        aux = aux->siguiente;
+    }
+
+    // El código de inventario no está repetido en la lista
+    return false;
 }
 
 
@@ -842,10 +865,43 @@ public:
     void borrarEnPosicion(int pos);
     void mostrar() const;
     int largoLista() const;
+    bool ciudadRepetida(int codCiudad) const;
+    void insertarCiudadMenu(int codCiudad, const string& nombre);
 
 private:
     pnodoCiudad primero;
 };
+
+
+bool ListaCircularCiudades::ciudadRepetida(int codCiudad) const {
+    if (listaVacia()) {
+        return false; // La lista está vacía, no hay ciudades repetidas
+    }
+
+    pnodoCiudad aux = primero;
+
+    do {
+        if (aux->codCiudad == codCiudad) {
+            // El código de ciudad ya existe en la lista
+            return true;
+        }
+        aux = aux->siguiente;
+    } while (aux != primero);
+
+    // El código de ciudad no está repetido en la lista
+    return false;
+}
+
+void ListaCircularCiudades::insertarCiudadMenu(int codCiudad, const string& nombre) {
+    // Validar si el codCiudad no está repetido
+    if (ciudadRepetida(codCiudad)==false) {
+        insertarAlInicio(codCiudad, nombre);
+    }
+    else {
+        cout << "El código de ciudad ya existe en la lista." << endl;
+    }
+}
+
 
 ListaCircularCiudades::~ListaCircularCiudades() {
     if (primero != nullptr) {
@@ -1064,10 +1120,36 @@ public:
     void mostrar() const;
     int largoLista() const;
     bool marcaRepetida(int codMarca) const;
+    void InsertarMarcaMenu(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantidadGondola, int precio, ListaSimplePas&ListaPasillo, ListaDobleProPasillos&ProductosPas);
 
 private:
     pnodoMarcaProducto primero;
 };
+
+void ListaCircularDMarcasProductos::InsertarMarcaMenu(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantidadGondola, int precio, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas) {
+    // Validar si el pasillo existe en la lista simple de pasillos
+    if (ListaPasillo.pasilloRepetido(codPasillo)==false) {
+        cout << "El pasillo no existe en la lista simple de pasillos." << endl;
+        return;
+    }
+
+    // Validar si el producto existe en la lista doble de productos
+    if (!ProductosPas.productoRepetido(codProducto)==false) {
+        cout << "El producto no existe en la lista doble de productos." << endl;
+        return;
+    }
+
+    // Validar si el codMarca no está repetido en la lista circular doble de marcas
+    if (marcaRepetida(codMarca)==true) {
+        cout << "El código de marca ya existe en la lista circular doble de marcas." << endl;
+        return;
+    }
+
+    // Insertar en la lista circular doble de marcas después de las validaciones
+    insertarAlInicio(codPasillo, codProducto, codMarca, nombre, cantidadGondola, precio);
+    cout << "Marca insertada en el menú de marcas exitosamente." << endl;
+}
+
 
 bool ListaCircularDMarcasProductos::marcaRepetida(int codMarca) const {
     pnodoMarcaProducto aux = primero;
