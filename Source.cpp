@@ -867,11 +867,36 @@ public:
     int largoLista() const;
     bool ciudadRepetida(int codCiudad) const;
     void insertarCiudadMenu(int codCiudad, const string& nombre);
+    void EliminarCiudad(int codCiudad);
 
 private:
     pnodoCiudad primero;
 };
 
+void ListaCircularCiudades::EliminarCiudad(int codCiudad) {
+    if (listaVacia()) {
+        cout << "La lista está vacía." << endl;
+        return;
+    }
+
+    pnodoCiudad actual = primero;
+    int pos = 1;
+
+    do {
+        if (actual->codCiudad == codCiudad) {
+            // Se encontró el nodo con el codCiudad dado, borrar en esa posición
+            borrarEnPosicion(pos);
+            cout << "Ciudad eliminada exitosamente." << endl;
+            return;
+        }
+
+        actual = actual->siguiente;
+        pos++;
+    } while (actual != primero);
+
+    // Si llegamos aquí, no se encontró el codCiudad en la lista
+    cout << "No se encontró la ciudad con el código dado." << endl;
+}
 
 bool ListaCircularCiudades::ciudadRepetida(int codCiudad) const {
     if (listaVacia()) {
