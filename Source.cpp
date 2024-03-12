@@ -1121,10 +1121,30 @@ public:
     int largoLista() const;
     bool marcaRepetida(int codMarca) const;
     void InsertarMarcaMenu(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantidadGondola, int precio, ListaSimplePas&ListaPasillo, ListaDobleProPasillos&ProductosPas);
+    void EliminarMarcas();
 
 private:
     pnodoMarcaProducto primero;
 };
+
+void ListaCircularDMarcasProductos::EliminarMarcas() {
+    if (listaVacia()) {
+        cout << "La lista está vacía." << endl;
+        return;
+    }
+
+    pnodoMarcaProducto actual = primero;
+    pnodoMarcaProducto siguiente;
+
+    do {
+        siguiente = actual->siguiente;
+        delete actual;
+        actual = siguiente;
+    } while (actual != primero);
+
+    primero = nullptr; // Establecer primero como nullptr después de eliminar todos los nodos
+    cout << "Todos los nodos han sido eliminados." << endl;
+}
 
 void ListaCircularDMarcasProductos::InsertarMarcaMenu(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantidadGondola, int precio, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas) {
     // Validar si el pasillo existe en la lista simple de pasillos
