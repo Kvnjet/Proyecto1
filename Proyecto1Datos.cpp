@@ -334,7 +334,7 @@ public:
     void BorrarPosicion(int pos);
     void Mostrar();
     int largoLista();
-    void insertarMenuProPasillo(int codPasillo, int codProducto, const string& nombre, ListaSimplePas listaSimplePasillo);
+    void insertarMenuProPasillo(int codPasillo, int codProducto, const string& nombre, ListaSimplePas& listaSimplePasillo);
     bool productoRepetido(int codProducto) const;
     void eliminarProducto(int codProducto);
 
@@ -342,19 +342,19 @@ private:
     pnodoProPasillo primero;
 };
 
-void ListaDobleProPasillos::insertarMenuProPasillo(int codPasillo, int codProducto, const string& nombre, ListaSimplePas listaSimplePasillos)
+void ListaDobleProPasillos::insertarMenuProPasillo(int codPasillo, int codProducto, const string& nombre, ListaSimplePas &listaSimplePasillos)
 {
     // Verifica si el pasillo existe en la lista simple
     if (listaSimplePasillos.pasilloRepetido(codPasillo))
     {
-        if (productoRepetido(codProducto) == false)
+        if (!productoRepetido(codProducto))
         {
             // Inserta al inicio después de las validaciones
             InsertarInicio(codPasillo, codProducto, nombre);
             cout << "Producto insertado exitosamente." << endl;
         }
         else
-            cout << "El codigo de producto ya existe en la lista." << endl;
+            cout << "El código de producto ya existe en la lista." << endl;
     }
     else
         cout << "El pasillo no existe en la lista simple." << endl;
@@ -618,7 +618,7 @@ void ListaDobleProPasillos::Mostrar()
 
     while (aux)
     {
-        cout << aux->codPasillo << ";" << aux->codProducto << ";" << aux->nombre << " -> ";
+        cout << aux->codPasillo << " - " << aux->codProducto << " - " << aux->nombre << " -> ";
         aux = aux->siguiente;
     }
 
@@ -699,20 +699,20 @@ bool ListaCircularDMarcasProductos::marcaRepetida(int codMarca) const
 void ListaCircularDMarcasProductos::insertarMarcaMenu(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantidadGondola, int precio, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas)
 {
     // Valida si el pasillo existe en la lista simple de pasillos
-    if (ListaPasillo.pasilloRepetido(codPasillo) == false)
+    if (!ListaPasillo.pasilloRepetido(codPasillo))
     {
         cout << "El pasillo no existe en la lista simple de pasillos." << endl;
         return;
     }
 
     // Valida si el producto existe en la lista doble de productos
-    if (!ProductosPas.productoRepetido(codProducto) == false)
+    if (!ProductosPas.productoRepetido(codProducto))
     {
         cout << "El producto no existe en la lista doble de productos." << endl;
         return;
     }
 
-    // Valida si el codMarca no está repetido en la lista circular doble de marcas
+    // Valida si el codMarca está repetido en la lista circular doble de marcas
     if (marcaRepetida(codMarca))
     {
         cout << "El codigo de marca ya existe en la lista circular doble de marcas." << endl;
@@ -1056,7 +1056,7 @@ void ListaDobleInventario::eliminarInventario(int codInventario, ListaSimplePas&
 {
     if (ListaVacia())
     {
-        cout << "La lista está vacía." << endl;
+        cout << "La lista esta vacia." << endl;
         return;
     }
 
@@ -2074,18 +2074,36 @@ int ListaCircularCiudades::largoLista() const
 
 
 // Función para convertir cadena a entero
-int stringAInt(string str) {
+int stringAInt(string str)
+{
     istringstream iss(str);
     int res;
-    if (!(iss >> res)) {
+    
+    if (!(iss >> res))
+	{
         cout << "No se pudo convertir la cadena a entero." << endl;
         return 0;
     }
+    
     return res;
 }
 
-// Función para leer y procesar el archivos
-void leerArchivo(string nombreArchivo)
+bool stringABool(string str)
+{
+    istringstream iss(str);
+    bool res;
+    
+    if (!(iss >> boolalpha >> res))
+	{
+        cout << "No se pudo convertir la cadena a bool." << endl;
+        return false;
+	}
+
+    return res;
+}
+
+// Funciones para leer y procesar los archivos
+void leerArchivo(string nombreArchivo, ListaSimplePas& listaPasillos)
 {
     ifstream archivo(nombreArchivo.c_str());
 
@@ -2095,50 +2113,31 @@ void leerArchivo(string nombreArchivo)
         return;
     }
 
-    cout << "Contenido del archivo " << nombreArchivo << ":" << endl;
-
     string linea;
     int contador = 0;
 
     while (getline(archivo, linea))
 	{
-		// Ignora líneas vacías
         if (linea == "")
             continue;
-        
-        // Incrementa el contador para ignorar la primera línea
+
         contador++;
 
-        // Comienza a procesar las líneas a partir de la segunda
         if (contador > 1)
 		{
-            string token;
-            bool inicioToken = false;
+            stringstream ss(linea);
+            int codPasillo;
+            string nombre;
 
-            // Procesa la línea carácter por carácter
-			for (int i = 0; i < linea.length(); ++i)
-			{
-			    char c = linea[i];
-			
-			    if (c == ' ' && !inicioToken)
-			        continue; // Ignora espacios en blanco antes del token
-			    else if (c == ';')
-				{
-			        cout << token << "; "; // Muestra el token actual
-			        token = ""; // Reinicia el token para el próximo
-			        inicioToken = false;
-			    }
-				else if (c != ' ')
-				{
-			        token += c; // Construye el token actual
-			        inicioToken = true;
-			    }
-			}
-
-            if (token != "")
-                cout << token << ""; // Muestra el último token de la línea
-
-            cout << endl; // Nueva línea para cada línea del archivo
+            if (ss >> codPasillo >> nombre) {
+                // Verifica si el pasillo ya existe antes de insertarlo
+                if (!listaPasillos.pasilloRepetido(codPasillo))
+                    listaPasillos.InsertarFinal(codPasillo, nombre);
+                else
+                    cout << "El pasillo con codigo " << codPasillo << " ya existe." << endl;
+            }
+			else
+                cout << "Error al parsear la linea: " << linea << endl;
         }
     }
 
@@ -2147,23 +2146,271 @@ void leerArchivo(string nombreArchivo)
 
 
 
+class ManejadorListas
+{
+public:
+	void crearListaPasillos(ListaSimplePas& listaPasillos);
+	void crearListaProductos(ListaDobleProPasillos& listaProductos, ListaSimplePas& listaPasillos);
+	void crearListaMarcas(ListaCircularDMarcasProductos& listaMarcas, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos);
+	void crearListaInventario(ListaDobleInventario& listaInventario, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcas);
+	void crearListaCiudades(ListaCircularCiudades& listaCiudades);
+};
+
+void ManejadorListas::crearListaPasillos(ListaSimplePas& listaPasillos)
+{
+	ifstream archivo("Pasillos.txt");
+
+    if (!archivo)
+	{
+        cout << "No se pudo abrir el archivo Pasillos.txt" << endl;
+        return;
+    }
+
+    cout << "Contenido del archivo Pasillos.txt:" << endl;
+
+    string linea;
+    int contador = 0;
+
+    while (getline(archivo, linea))
+	{
+        // Ignora líneas vacías
+        if (linea == "")
+            continue;
+
+        // Incrementa el contador para ignorar la primera línea
+        contador++;
+
+        // Comienza a procesar las líneas a partir de la segunda
+        if (contador > 1) {
+            stringstream ss(linea);
+            string codPasillo, nombre;
+            getline(ss, codPasillo, ';');
+            getline(ss, nombre, ';');
+
+            int codPas = stringAInt(codPasillo);
+            
+			// Inserta en la lista simple de pasillos después de las validaciones
+            listaPasillos.insertarMenuPasillo(codPas, nombre);
+        }
+    }
+
+    archivo.close();
+}
+
+void ManejadorListas::crearListaProductos(ListaDobleProPasillos& listaProductos, ListaSimplePas& listaPasillos)
+{
+    ifstream archivo("ProductosPasillos.txt");
+
+    if (!archivo)
+    {
+        cout << "No se pudo abrir el archivo ProductosPasillos.txt" << endl;
+        return;
+    }
+
+    cout << "Contenido del archivo ProductosPasillos.txt:" << endl;
+
+    string linea;
+    int contador = 0;
+
+    while (getline(archivo, linea))
+    {
+        // Ignora líneas vacías
+        if (linea == "")
+            continue;
+
+        // Incrementa el contador para ignorar la primera línea
+        contador++;
+
+        // Comienza a procesar las líneas a partir de la segunda
+        if (contador > 1)
+        {
+            stringstream ss(linea);
+            string codPasillo, codProducto, nombre;
+            getline(ss, codPasillo, ';');
+            getline(ss, codProducto, ';');
+            getline(ss, nombre, ';');
+
+            int codPas = stringAInt(codPasillo);
+            int codProd = stringAInt(codProducto);
+
+            // Inserta en la lista doble de productos después de las validaciones
+            cout << "Insertando producto: " << codPas << ", " << codProd << ", " << nombre << endl;
+            listaProductos.insertarMenuProPasillo(codPas, codProd, nombre, listaPasillos);
+        }
+    }
+
+    cout << "Lista de productos creada correctamente." << endl;
+    archivo.close();
+}
+
+void ManejadorListas::crearListaMarcas(ListaCircularDMarcasProductos& listaMarcas, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos)
+{
+    ifstream archivo("MarcasProductos.txt");
+
+    if (!archivo)
+    {
+        cout << "No se pudo abrir el archivo MarcasProductos.txt" << endl;
+        return;
+    }
+
+    cout << "Contenido del archivo MarcasProductos.txt:" << endl;
+
+    string linea;
+    int contador = 0;
+
+    while (getline(archivo, linea))
+    {
+        // Ignora líneas vacías
+        if (linea == "")
+            continue;
+
+        // Incrementa el contador para ignorar la primera línea
+        contador++;
+
+        // Comienza a procesar las líneas a partir de la segunda
+        if (contador > 1)
+        {
+            stringstream ss(linea);
+            string codPasillo, codProducto, codMarca, nombre, cantidadGondola, precio;
+            getline(ss, codPasillo, ';');
+            getline(ss, codProducto, ';');
+            getline(ss, codMarca, ';');
+            getline(ss, nombre, ';');
+            getline(ss, cantidadGondola, ';');
+            getline(ss, precio, ';');
+
+            int codPas = stringAInt(codPasillo);
+            int codProd = stringAInt(codProducto);
+            int codMar = stringAInt(codMarca);
+            int cantGondola = stringAInt(cantidadGondola);
+            int prec = stringAInt(precio);
+
+            // Inserta en la lista circular doble de marcas después de las validaciones
+            listaMarcas.insertarMarcaMenu(codPas, codProd, codMar, nombre, cantGondola, prec, listaPasillos, listaProductos);
+        }
+    }
+
+    archivo.close();
+}
+
+void ManejadorListas::crearListaInventario(ListaDobleInventario& listaInventario, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcas)
+{
+	ifstream archivo("Inventario.txt");
+
+    if (!archivo)
+    {
+        cout << "No se pudo abrir el archivo Inventario.txt" << endl;
+        return;
+    }
+
+    cout << "Contenido del archivo Inventario.txt:" << endl;
+
+    string linea;
+    int contador = 0;
+
+    while (getline(archivo, linea))
+    {
+        // Ignora líneas vacías
+        if (linea == "")
+            continue;
+
+        // Incrementa el contador para ignorar la primera línea
+        contador++;
+
+        // Comienza a procesar las líneas a partir de la segunda
+        if (contador > 1)
+        {
+            stringstream ss(linea);
+            string codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, precio, codigoCanasta;
+            getline(ss, codPasillo, ';');
+            getline(ss, codProducto, ';');
+            getline(ss, codMarca, ';');
+            getline(ss, codInventario, ';');
+            getline(ss, nombre, ';');
+            getline(ss, cantidadStock, ';');
+            getline(ss, precio, ';');
+            getline(ss, codigoCanasta, ';');
+
+            int codPas = stringAInt(codPasillo);
+            int codProd = stringAInt(codProducto);
+            int codMar = stringAInt(codMarca);
+            int codInv = stringAInt(codInventario);
+            int cantStock = stringAInt(cantidadStock);
+            bool codCanasta = stringABool(cantidadStock);
+
+            // Inserta en la lista doble de inventario después de las validaciones
+            listaInventario.insertarInventario(codPas, codProd, codMar, codInv, nombre, cantStock, codCanasta, listaPasillos, listaProductos, listaMarcas);
+        }
+    }
+
+    archivo.close();
+}
+
+void ManejadorListas::crearListaCiudades(ListaCircularCiudades& listaCiudades)
+{
+	ifstream archivo("Ciudades.txt");
+	
+	if (!archivo)
+	{
+	    cout << "No se pudo abrir el archivo Ciudades.txt" << endl;
+	    return;
+	}
+	
+	cout << "Contenido del archivo Ciudades.txt:" << endl;
+	
+	string linea;
+	int contador = 0;
+	
+	while (getline(archivo, linea))
+	{
+	    // Ignora líneas vacías
+	    if (linea == "")
+	        continue;
+	
+	    // Incrementa el contador para ignorar la primera línea
+	    contador++;
+	
+	    // Comienza a procesar las líneas a partir de la segunda
+	    if (contador > 1)
+	    {
+	        stringstream ss(linea);
+	        string codCiudad, nombre;
+	        getline(ss, codCiudad, ';');
+	        getline(ss, nombre, ';');
+	
+	        int codCiu = stringAInt(codCiudad);
+	
+	        // Inserta en la lista circular simple de ciudades después de las validaciones
+	        listaCiudades.insertarCiudadMenu(codCiu, nombre);
+	    }
+	}
+}
+
+
+
 int main()
 {
-    leerArchivo("Pasillos.txt");
+    ManejadorListas manejador;
+    ListaSimplePas listaPasillos;
+    ListaDobleProPasillos listaProductos;
+    ListaCircularDMarcasProductos listaMarcas;
+    ListaDobleInventario listaInventario;
+    ListaCircularCiudades listaCiudades;
+    
+    manejador.crearListaPasillos(listaPasillos);
+    listaPasillos.Mostrar();
     cout << endl;
-    leerArchivo("ProductosPasillos.txt");
+    manejador.crearListaProductos(listaProductos, listaPasillos);
+    listaProductos.Mostrar();
     cout << endl;
-    leerArchivo("MarcasProductos.txt");
+    manejador.crearListaMarcas(listaMarcas, listaPasillos, listaProductos);
+    listaMarcas.Mostrar();
     cout << endl;
-	leerArchivo("MarcasProductos.txt");
+    manejador.crearListaInventario(listaInventario, listaPasillos, listaProductos, listaMarcas);
+    listaInventario.Mostrar();
     cout << endl;
-	leerArchivo("Inventario.txt");
-    cout << endl;
-	leerArchivo("Clientes.txt");
-    cout << endl;
-	leerArchivo("Administradores.txt");
-    cout << endl;
-	leerArchivo("Ciudades.txt");
+    manejador.crearListaCiudades(listaCiudades);
+    listaCiudades.Mostrar();
 
     return 0;
 }
