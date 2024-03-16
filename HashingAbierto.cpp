@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// Clase NodoCliente para almacenar la información de clientes
+// Clase NodoCliente para la información de clientes
 class NodoCliente
 {
 public:
@@ -28,6 +28,12 @@ public:
         correo = _correo;
         siguiente = _siguiente;
     }
+    
+    int getCedula() { return cedula; }
+    string getNombre() { return nombre; }
+    int getCodCiudad() { return codCiudad; }
+    string getTelefono() { return telefono; }
+    string getCorreo() { return correo; }
 
 private:
     int cedula;
@@ -37,224 +43,10 @@ private:
     string correo;
     NodoCliente* siguiente; // Clase de Autoreferencia
 
-    friend class ListaSimpleCte;
     friend class HashingClientes;
 };
 
 typedef NodoCliente* pnodoCte;
-
-
-
-class ListaSimpleCte
-{
-public:
-    ListaSimpleCte() { primero = NULL; } // Constructor
-    ~ListaSimpleCte();                   // Destructor
-
-    bool ListaVacia() { return primero == NULL; }
-    int largoLista();
-    void InsertarInicio(int cedula, string nombre, int codCiudad, string telefono, string correo);
-    void InsertarFinal(int cedula, string nombre, int codCiudad, string telefono, string correo);
-    void InsertarPos(int cedula, string nombre, int codCiudad, string telefono, string correo, int pos);
-    void BorrarInicio();
-    void BorrarFinal();
-    void BorrarPosicion(int pos);
-    void Mostrar();
-
-private:
-    pnodoCte primero;
-};
-
-ListaSimpleCte::~ListaSimpleCte()
-{
-    pnodoCte aux;
-
-    while (primero)
-    {
-        aux = primero;
-        primero = primero->siguiente;
-
-        delete aux;
-    }
-
-    primero = NULL;
-}
-
-int ListaSimpleCte::largoLista()
-{
-    int cont = 0;
-    pnodoCte aux = primero;
-
-    if (ListaVacia())
-        return cont;
-    else
-    {
-        while (aux != NULL)
-        {
-            aux = aux->siguiente;
-            cont++;
-        }
-
-        return cont;
-        cout << endl;
-    }
-}
-
-void ListaSimpleCte::InsertarInicio(int cedula, string nombre, int codCiudad, string telefono, string correo)
-{
-    if (ListaVacia())
-        primero = new NodoCliente(cedula, nombre, codCiudad, telefono, correo);
-    else
-        primero = new NodoCliente(cedula, nombre, codCiudad, telefono, correo, primero);
-}
-
-void ListaSimpleCte::InsertarFinal(int cedula, string nombre, int codCiudad, string telefono, string correo)
-{
-    if (ListaVacia())
-        primero = new NodoCliente(cedula, nombre, codCiudad, telefono, correo);
-    else
-    {
-        pnodoCte aux = primero;
-
-        while (aux->siguiente != NULL)
-            aux = aux->siguiente;
-
-        aux->siguiente = new NodoCliente(cedula, nombre, codCiudad, telefono, correo);
-    }
-}
-
-void ListaSimpleCte::InsertarPos(int cedula, string nombre, int codCiudad, string telefono, string correo, int pos)
-{
-    if (ListaVacia())
-        primero = new NodoCliente(cedula, nombre, codCiudad, telefono, correo);
-    else
-    {
-        if (pos <= 1)
-            InsertarInicio(cedula, nombre, codCiudad, telefono, correo);
-        else
-        {
-            pnodoCte aux = primero;
-            int i = 2;
-            
-            while ((i != pos) && (aux->siguiente != NULL))
-            {
-                i++;
-                aux = aux->siguiente;
-            }
-
-            pnodoCte nuevo = new NodoCliente(cedula, nombre, codCiudad, telefono, correo);
-            nuevo->siguiente = aux->siguiente;
-            aux->siguiente = nuevo;
-        }
-    }
-}
-
-void ListaSimpleCte::BorrarInicio()
-{
-    if (ListaVacia())
-        cout << "No hay elementos en la lista." << endl;
-    else
-    {
-        if (primero->siguiente == NULL)
-        {
-            pnodoCte temp = primero;
-            primero = NULL;
-            delete temp;
-        }
-        else
-        {
-            pnodoCte aux = primero;
-            primero = primero->siguiente;
-            delete aux;
-        }
-    }
-}
-
-void ListaSimpleCte::BorrarFinal()
-{
-    if (ListaVacia())
-        cout << "No hay elementos en la lista." << endl;
-    else
-    {
-        if (primero->siguiente == NULL)
-        {
-            pnodoCte temp = primero;
-            primero = NULL;
-            delete temp;
-        }
-        else
-        {
-            pnodoCte aux = primero;
-            
-            while (aux->siguiente->siguiente != NULL)
-                aux = aux->siguiente;
-
-            pnodoCte temp = aux->siguiente;
-            aux->siguiente = NULL;
-            delete temp;
-        }
-    }
-}
-
-void ListaSimpleCte::BorrarPosicion(int pos)
-{
-    if (ListaVacia())
-        cout << "La lista esta vacia." << endl;
-    else
-    {
-        if ((pos > largoLista()) || (pos < 0))
-            cout << "Error en posición." << endl;
-        else
-        {
-            if (pos == 1)
-            {
-                pnodoCte temp = primero;
-                primero = primero->siguiente;
-                delete temp; // BorrarInicio();
-            }
-            else
-            {
-                pnodoCte aux = primero;
-                int cont = 2;
-                
-                while (cont < pos)
-                {
-                    aux = aux->siguiente;
-                    cont++;
-                }
-
-                pnodoCte temp = aux->siguiente;
-                aux->siguiente = aux->siguiente->siguiente;
-                delete temp;
-            }
-        }
-    }
-}
-
-void ListaSimpleCte::Mostrar()
-{
-    pnodoCte aux;
-
-    if (primero == NULL)
-        cout << "No hay elementos.";
-    else
-    {
-        aux = primero;
-        
-        while (aux)
-        {
-            cout << aux->cedula << " - " <<
-                aux->nombre << " - " <<
-                aux->codCiudad << " - " <<
-                aux->telefono << " - " <<
-                aux->correo << " -> " << endl;
-
-            aux = aux->siguiente;
-        }
-
-        cout << endl;
-    }
-}
 
 
 
@@ -265,28 +57,27 @@ public:
     ~HashingClientes();     // Destructor
 
     void insertarCliente(int cedula, string nombre, int codCiudad, string telefono, string correo);
+    void eliminarCliente(int cedula);
+    pnodoCte buscarCliente(int cedula);
+    void modificarCliente(int cedula, string nombre, int codCiudad, string telefono, string correo);
     void mostrarHash();
 
 private:
-    int numCubos;   	 // Número de cubos
-    pnodoCte* tablaHash; // Puntero a un arreglo que contiene cubos
-
-    bool ciudadExiste(int codCiudad);
+    pnodoCte* tablaHash; // Puntero al arreglo que contiene los clientes
 };
 
 HashingClientes::HashingClientes(int N)
 {
-    numCubos = 13;
-    tablaHash = new pnodoCte[numCubos]();
+    tablaHash = new pnodoCte[13]();
 
     // Inicializa la tabla hash con NULL
-    for (int i = 0; i < numCubos; i++)
+    for (int i = 0; i < 13; i++)
         tablaHash[i] = NULL;
 }
 
 HashingClientes::~HashingClientes()
 {
-    for (int i = 0; i < numCubos; i++)
+    for (int i = 0; i < 13; i++)
     {
         pnodoCte actual = tablaHash[i];
 
@@ -301,20 +92,10 @@ HashingClientes::~HashingClientes()
     delete[] tablaHash;
 }
 
-bool HashingClientes::ciudadExiste(int codCiudad)
-{
-    return true;
-}
-
 // Método que inserta un nuevo cliente en la tabla hash
 void HashingClientes::insertarCliente(int cedula, string nombre, int codCiudad, string telefono, string correo)
 {
-    // Valida que la ciudad exista
-    if (!ciudadExiste(codCiudad))
-    {
-        cout << "Ciudad no valida." << endl;
-        return;
-    }
+    // Falta validar que la ciudad exista
 
     // Aplica la función de hashing
     int indice = cedula % 13;
@@ -336,10 +117,64 @@ void HashingClientes::insertarCliente(int cedula, string nombre, int codCiudad, 
     }
 }
 
+void HashingClientes::eliminarCliente(int cedula)
+{
+    int indice = cedula % 13;
+
+    pnodoCte actual = tablaHash[indice];
+    pnodoCte anterior = NULL;
+
+    while ((actual != NULL) && (actual->cedula != cedula))
+    {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (actual == NULL)
+    {
+        cout << "Cliente no encontrado." << endl;
+        return;
+    }
+
+    if (anterior == NULL)
+        tablaHash[indice] = actual->siguiente;
+    else
+        anterior->siguiente = actual->siguiente;
+
+    delete actual;
+}
+
+pnodoCte HashingClientes::buscarCliente(int cedula)
+{
+    int indice = cedula % 13;
+
+    pnodoCte actual = tablaHash[indice];
+
+    while ((actual != NULL) && (actual->cedula != cedula))
+        actual = actual->siguiente;
+
+    return actual;
+}
+
+void HashingClientes::modificarCliente(int cedula, string nombre, int codCiudad, string telefono, string correo)
+{
+    pnodoCte cliente = buscarCliente(cedula);
+
+    if (cliente == NULL)
+    {
+        cout << "\nCliente no encontrado." << endl;
+        return;
+    }
+
+    cliente->nombre = nombre;
+    cliente->codCiudad = codCiudad;
+    cliente->telefono = telefono;
+    cliente->correo = correo;
+}
 
 void HashingClientes::mostrarHash()
 {
-    for (int i = 0; i < numCubos; ++i)
+    for (int i = 0; i < 13; ++i)
     {
         cout << i;
         pnodoCte actual = tablaHash[i];
@@ -354,6 +189,9 @@ void HashingClientes::mostrarHash()
 			
             actual = actual->siguiente;
         }
+        
+        if (tablaHash[i] == 0)
+			cout << " No hay clientes." << endl;
 
         cout << endl;
     }
@@ -361,7 +199,7 @@ void HashingClientes::mostrarHash()
 
 
 
-// Clase NodoAdmin para almacenar la información de administradores
+// Clase NodoAdmin para la información de administradores
 class NodoAdmin
 {
 public:
@@ -384,6 +222,12 @@ public:
         correo = _correo;
         siguiente = _siguiente;
     }
+    
+    int getCedula() { return cedula; }
+    string getNombre() { return nombre; }
+    int getCodCiudad() { return codCiudad; }
+    string getTelefono() { return telefono; }
+    string getCorreo() { return correo; }
 
 private:
     int cedula;
@@ -393,223 +237,10 @@ private:
     string correo;
     NodoAdmin* siguiente; // Clase de Autoreferencia
 
-    friend class ListaSimpleAdmin;
     friend class HashingAdmins;
 };
 
 typedef NodoAdmin* pnodoAdmin;
-
-
-
-class ListaSimpleAdmin
-{
-public:
-    ListaSimpleAdmin() { primero = NULL; } // Constructor
-    ~ListaSimpleAdmin();                   // Destructor
-
-    bool ListaVacia() { return primero == NULL; }
-    int largoLista();
-    void InsertarInicio(int cedula, string nombre, int codCiudad, string telefono, string correo);
-    void InsertarFinal(int cedula, string nombre, int codCiudad, string telefono, string correo);
-    void InsertarPos(int cedula, string nombre, int codCiudad, string telefono, string correo, int pos);
-    void BorrarInicio();
-    void BorrarFinal();
-    void BorrarPosicion(int pos);
-    void Mostrar();
-
-private:
-    pnodoAdmin primero;
-};
-
-ListaSimpleAdmin::~ListaSimpleAdmin()
-{
-    pnodoAdmin aux;
-
-    while (primero)
-    {
-        aux = primero;
-        primero = primero->siguiente;
-        delete aux;
-    }
-
-    primero = NULL;
-}
-
-int ListaSimpleAdmin::largoLista()
-{
-    int cont = 0;
-    pnodoAdmin aux = primero;
-
-    if (ListaVacia())
-        return cont;
-    else
-    {
-        while (aux != NULL)
-        {
-            aux = aux->siguiente;
-            cont++;
-        }
-
-        return cont;
-        cout << endl;
-    }
-}
-
-void ListaSimpleAdmin::InsertarInicio(int cedula, string nombre, int codCiudad, string telefono, string correo)
-{
-    if (ListaVacia())
-        primero = new NodoAdmin(cedula, nombre, codCiudad, telefono, correo);
-    else
-        primero = new NodoAdmin(cedula, nombre, codCiudad, telefono, correo, primero);
-}
-
-void ListaSimpleAdmin::InsertarFinal(int cedula, string nombre, int codCiudad, string telefono, string correo)
-{
-    if (ListaVacia())
-        primero = new NodoAdmin(cedula, nombre, codCiudad, telefono, correo);
-    else
-    {
-        pnodoAdmin aux = primero;
-
-        while (aux->siguiente != NULL)
-            aux = aux->siguiente;
-
-        aux->siguiente = new NodoAdmin(cedula, nombre, codCiudad, telefono, correo);
-    }
-}
-
-void ListaSimpleAdmin::InsertarPos(int cedula, string nombre, int codCiudad, string telefono, string correo, int pos)
-{
-    if (ListaVacia())
-        primero = new NodoAdmin(cedula, nombre, codCiudad, telefono, correo);
-    else
-    {
-        if (pos <= 1)
-            InsertarInicio(cedula, nombre, codCiudad, telefono, correo);
-        else
-        {
-            pnodoAdmin aux = primero;
-            int i = 2;
-            
-            while ((i != pos) && (aux->siguiente != NULL))
-            {
-                i++;
-                aux = aux->siguiente;
-            }
-
-            pnodoAdmin nuevo = new NodoAdmin(cedula, nombre, codCiudad, telefono, correo);
-            nuevo->siguiente = aux->siguiente;
-            aux->siguiente = nuevo;
-        }
-    }
-}
-
-void ListaSimpleAdmin::BorrarInicio()
-{
-    if (ListaVacia())
-        cout << "No hay elementos en la lista." << endl;
-    else
-    {
-        if (primero->siguiente == NULL)
-        {
-            pnodoAdmin temp = primero;
-            primero = NULL;
-            delete temp;
-        }
-        else
-        {
-            pnodoAdmin aux = primero;
-            primero = primero->siguiente;
-            delete aux;
-        }
-    }
-}
-
-void ListaSimpleAdmin::BorrarFinal()
-{
-    if (ListaVacia())
-        cout << "No hay elementos en la lista." << endl;
-    else
-    {
-        if (primero->siguiente == NULL)
-        {
-            pnodoAdmin temp = primero;
-            primero = NULL;
-            delete temp;
-        }
-        else
-        {
-            pnodoAdmin aux = primero;
-            
-            while (aux->siguiente->siguiente != NULL)
-                aux = aux->siguiente;
-
-            pnodoAdmin temp = aux->siguiente;
-            aux->siguiente = NULL;
-            delete temp;
-        }
-    }
-}
-
-void ListaSimpleAdmin::BorrarPosicion(int pos)
-{
-    if (ListaVacia())
-        cout << "La lista esta vacia." << endl;
-    else
-    {
-        if ((pos > largoLista()) || (pos < 0))
-            cout << "Error en posición." << endl;
-        else
-        {
-            if (pos == 1)
-            {
-                pnodoAdmin temp = primero;
-                primero = primero->siguiente;
-                delete temp; // BorrarInicio();
-            }
-            else
-            {
-                pnodoAdmin aux = primero;
-                int cont = 2;
-                
-                while (cont < pos)
-                {
-                    aux = aux->siguiente;
-                    cont++;
-                }
-
-                pnodoAdmin temp = aux->siguiente;
-                aux->siguiente = aux->siguiente->siguiente;
-                delete temp;
-            }
-        }
-    }
-}
-
-void ListaSimpleAdmin::Mostrar()
-{
-    pnodoAdmin aux;
-
-    if (primero == NULL)
-        cout << "No hay elementos.";
-    else
-    {
-        aux = primero;
-        
-        while (aux)
-        {
-            cout << aux->cedula << " - " <<
-                aux->nombre << " - " <<
-                aux->codCiudad << " - " <<
-                aux->telefono << " - " <<
-                aux->correo << " -> " << endl;
-
-            aux = aux->siguiente;
-        }
-
-        cout << endl;
-    }
-}
 
 
 
@@ -620,28 +251,27 @@ public:
     ~HashingAdmins();     // Destructor
 
     void insertarAdmin(int cedula, string nombre, int codCiudad, string telefono, string correo);
+    void eliminarAdmin(int cedula);
+    pnodoAdmin buscarAdmin(int cedula);
+    void modificarAdmin(int cedula, string nombre, int codCiudad, string telefono, string correo);
     void mostrarHash();
 
 private:
-    int numCubos;   	 // Número de cubos
-    pnodoAdmin* tablaHash; // Puntero a un arreglo que contiene cubos
-
-    bool ciudadExiste(int codCiudad);
+    pnodoAdmin* tablaHash; // Puntero al arreglo que contiene los administradores
 };
 
 HashingAdmins::HashingAdmins(int N)
 {
-    numCubos = 13;
-    tablaHash = new pnodoAdmin[numCubos]();
+    tablaHash = new pnodoAdmin[13]();
 
     // Inicializa la tabla hash con NULL
-    for (int i = 0; i < numCubos; i++)
+    for (int i = 0; i < 13; i++)
         tablaHash[i] = NULL;
 }
 
 HashingAdmins::~HashingAdmins()
 {
-    for (int i = 0; i < numCubos; i++)
+    for (int i = 0; i < 13; i++)
     {
         pnodoAdmin actual = tablaHash[i];
 
@@ -656,20 +286,10 @@ HashingAdmins::~HashingAdmins()
     delete[] tablaHash;
 }
 
-bool HashingAdmins::ciudadExiste(int codCiudad)
-{
-    return true;
-}
-
 // Método que inserta un nuevo administrador en la tabla hash
 void HashingAdmins::insertarAdmin(int cedula, string nombre, int codCiudad, string telefono, string correo)
 {
-    // Valida que la ciudad exista
-    if (!ciudadExiste(codCiudad))
-    {
-        cout << "Ciudad no valida." << endl;
-        return;
-    }
+    // Validar que la ciudad exista
 
     // Aplica la función de hashing
     int indice = cedula % 13;
@@ -691,10 +311,64 @@ void HashingAdmins::insertarAdmin(int cedula, string nombre, int codCiudad, stri
     }
 }
 
+void HashingAdmins::eliminarAdmin(int cedula)
+{
+    int indice = cedula % 13;
+
+    pnodoAdmin actual = tablaHash[indice];
+    pnodoAdmin anterior = NULL;
+
+    while ((actual != NULL) && (actual->cedula != cedula))
+    {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (actual == NULL)
+    {
+        cout << "Administrador no encontrado." << endl;
+        return;
+    }
+
+    if (anterior == NULL)
+        tablaHash[indice] = actual->siguiente;
+    else
+        anterior->siguiente = actual->siguiente;
+
+    delete actual;
+}
+
+pnodoAdmin HashingAdmins::buscarAdmin(int cedula)
+{
+    int indice = cedula % 13;
+
+    pnodoAdmin actual = tablaHash[indice];
+
+    while ((actual != NULL) && (actual->cedula != cedula))
+        actual = actual->siguiente;
+
+    return actual;
+}
+
+void HashingAdmins::modificarAdmin(int cedula, string nombre, int codCiudad, string telefono, string correo)
+{
+    pnodoAdmin admin = buscarAdmin(cedula);
+
+    if (admin == NULL)
+    {
+        cout << "Administrador no encontrado." << endl;
+        return;
+    }
+
+    admin->nombre = nombre;
+    admin->codCiudad = codCiudad;
+    admin->telefono = telefono;
+    admin->correo = correo;
+}
 
 void HashingAdmins::mostrarHash()
 {
-    for (int i = 0; i < numCubos; ++i)
+    for (int i = 0; i < 13; ++i)
     {
         cout << i;
         pnodoAdmin actual = tablaHash[i];
@@ -709,10 +383,14 @@ void HashingAdmins::mostrarHash()
 			
             actual = actual->siguiente;
         }
+        
+        if (tablaHash[i] == 0)
+			cout << " No hay administradores." << endl;
 
         cout << endl;
     }
 }
+
 
 
 // Función auxiliar para convertir de string a entero
@@ -730,28 +408,23 @@ int stringAInt(string str)
     return res;
 }
 
-
-
-int main()
+void cargarClientesDesdeArchivo(HashingClientes& hashClientes)
 {
-	ifstream archivoClientes("Clientes.txt");
+    ifstream archivo("Clientes.txt");
 
-    if (!archivoClientes)
+    if (!archivo)
 	{
         cout << "No se pudo abrir el archivo Clientes.txt" << endl;
-        return 1;
+        return;
     }
 
-    cout << "Contenido del archivo Clientes.txt:" << endl;
-
-    string linea1;
+    string linea;
     int contador = 0;
-    HashingClientes hashClientes(13);
 
-    while (getline(archivoClientes, linea1))
+    while (getline(archivo, linea))
 	{
         // Ignora líneas vacías
-        if (linea1 == "")
+        if (linea == "")
             continue;
 
         // Incrementa el contador para ignorar la primera línea
@@ -760,7 +433,7 @@ int main()
         // Comienza a procesar las líneas a partir de la segunda
         if (contador > 1)
 		{
-            istringstream ss(linea1);
+            istringstream ss(linea);
             string cedula, nombre, codCiudad, telefono, correo;
             
             getline(ss, cedula, ';'); ss >> ws;
@@ -770,37 +443,33 @@ int main()
             getline(ss, correo, ';'); ss >> ws;
 
             // Inserta en el hash de clientes después de las validaciones
-            cout << "Insertando cliente: " << cedula << ", " << nombre << ", " << codCiudad << ", " << telefono << ", " << correo << endl;
             hashClientes.insertarCliente(stringAInt(cedula), nombre, stringAInt(codCiudad), telefono, correo);
         }
     }
 
-    archivoClientes.close();
-    
-    hashClientes.mostrarHash();
-    
-    cout << endl;
-    
-    ifstream archivoAdmins("Administradores.txt");
+    archivo.close();
+}
 
-    if (!archivoAdmins)
+void cargarAdminsDesdeArchivo(HashingAdmins& hashAdmins)
+{
+    ifstream archivo("Administradores.txt");
+
+    if (!archivo)
 	{
         cout << "No se pudo abrir el archivo Administradores.txt" << endl;
-        return 1;
+        return;
     }
 
-    cout << "Contenido del archivo Administradores.txt:" << endl;
+    string linea;
+    int contador = 0;
 
-    string linea2;
-    HashingAdmins hashAdmins(13);
-
-    while (getline(archivoAdmins, linea2))
+    while (getline(archivo, linea))
 	{
         // Ignora líneas vacías
-        if (linea2 == "")
+        if (linea == "")
             continue;
-        
-        istringstream ss(linea2);
+
+        istringstream ss(linea);
         string cedula, nombre, codCiudad, telefono, correo;
         
         getline(ss, cedula, ';'); ss >> ws;
@@ -810,13 +479,235 @@ int main()
         getline(ss, correo, ';'); ss >> ws;
 
         // Inserta en el hash de administradores después de las validaciones
-        cout << "Insertando administrador: " << cedula << ", " << nombre << ", " << codCiudad << ", " << telefono << ", " << correo << endl;
         hashAdmins.insertarAdmin(stringAInt(cedula), nombre, stringAInt(codCiudad), telefono, correo);
     }
 
-    archivoAdmins.close();
+    archivo.close();
+}
+
+void mostrarMenuPrincipal()
+{
+    cout << "******* MENU PRINCIPAL *******" << endl;
+    cout << "  1. Gestionar Pasillos" << endl;
+    cout << "  2. Gestionar Productos" << endl;
+    cout << "  3. Gestionar Marcas" << endl;
+    cout << "  4. Gestionar Inventarios" << endl;
+    cout << "  5. Gestionar Clientes" << endl;
+    cout << "  6. Gestionar Administradores" << endl;
+    cout << "  7. Gestionar Ciudades" << endl;
+    cout << "  8. Salir" << endl;
+}
+
+
+
+int main()
+{
+	// Crea un objeto HashingClientes y un objeto HashingAdmins de tamaño 13
+	HashingClientes hashClientes(13);
+    HashingAdmins hashAdmins(13);
     
-    hashAdmins.mostrarHash();
+    cargarClientesDesdeArchivo(hashClientes);
+    cargarAdminsDesdeArchivo(hashAdmins);
+    
+    int opcion, opcion2;
+    do
+	{
+        mostrarMenuPrincipal();
+        cout << "\nIngrese la opcion deseada: ";
+        cin >> opcion;
+
+        switch (opcion)
+		{
+			case 1: // Pasillo
+            case 2: // Producto
+            case 3: // Marca
+            case 4: // Inventario
+            case 5: // Clientes
+            {
+        		do
+        		{
+        			cout << "\n******* CLIENTES *******" << endl;
+				    cout << "  1. Insertar cliente" << endl;
+				    cout << "  2. Eliminar cliente" << endl;
+				    cout << "  3. Buscar cliente" << endl;
+				    cout << "  4. Modificar cliente" << endl;
+				    cout << "  5. Mostrar clientes" << endl;
+				    cout << "  6. Volver" << endl;
+				    
+				    cout << "\nIngrese la opcion deseada: ";
+	        		cin >> opcion2;
+	        		
+	        		switch (opcion2)
+					{
+		        		case 1:
+						{
+			                int cedula, codCiudad;
+			                string nombre, telefono, correo;
+			                
+			                cout << "Ingrese la cedula del cliente: "; cin >> cedula;
+			                cout << "Ingrese el nombre del cliente: "; cin.ignore(); getline(cin, nombre);
+			                cout << "Ingrese el codigo de la ciudad del cliente: "; cin >> codCiudad;
+			                cout << "Ingrese el telefono del cliente: "; cin >> telefono;
+			                cout << "Ingrese el correo del cliente: "; cin >> correo;
+			                
+							hashClientes.insertarCliente(cedula, nombre, codCiudad, telefono, correo);
+			                break;
+			            }
+			            case 2:
+						{
+			                int cedulaAEliminar;
+			                
+							cout << "Ingrese la cedula del cliente a eliminar: "; cin >> cedulaAEliminar;
+			                
+							hashClientes.eliminarCliente(cedulaAEliminar);
+			                break;
+			            }
+			            case 3:
+						{
+			                int cedulaABuscar;
+			                
+							cout << "Ingrese la cedula del cliente a buscar: "; cin >> cedulaABuscar;
+			                
+							pnodoCte clienteBuscado = hashClientes.buscarCliente(cedulaABuscar);
+							
+			                if (clienteBuscado != NULL)
+							{
+			                    cout << "\nCliente encontrado:" << endl;
+			                    cout << "Cedula: " << clienteBuscado->getCedula() << endl;
+			                    cout << "Nombre: " << clienteBuscado->getNombre() << endl;
+			                    cout << "Ciudad: " << clienteBuscado->getCodCiudad() << endl;
+			                    cout << "Telefono: " << clienteBuscado->getTelefono() << endl;
+			                    cout << "Correo: " << clienteBuscado->getCorreo() << endl;
+			                }
+							else
+			                    cout << "\nCliente con cedula " << cedulaABuscar << " no encontrado." << endl;
+			                break;
+			            }
+			            case 4:
+						{
+			                int cedulaAModificar, codCiudad;
+			                string nombre, telefono, correo;
+			                
+			                cout << "Ingrese la cedula del cliente a modificar: "; cin >> cedulaAModificar;
+			                cout << "Ingrese el nuevo nombre del cliente: "; cin.ignore(); getline(cin, nombre);
+			                cout << "Ingrese el nuevo codigo de la ciudad del cliente: "; cin >> codCiudad;
+			                cout << "Ingrese el nuevo telefono del cliente: "; cin >> telefono;
+			                cout << "Ingrese el nuevo correo del cliente: "; cin >> correo;
+			                
+			                hashClientes.modificarCliente(cedulaAModificar, nombre, codCiudad, telefono, correo);
+			                break;
+			            }
+			            case 5:
+						{
+			                cout << "\nClientes:" << endl;
+			                hashClientes.mostrarHash();
+			                break;
+			            }
+			            case 6: cout << endl; break;
+			            default: cout << "Ingrese una opcion valida.\n" << endl;
+		        	}
+				} while (opcion2 != 6);
+				
+				break;
+			}
+			
+            case 6: // Administradores
+            {
+            	do
+        		{
+        			cout << "\n******* ADMINISTRADORES *******" << endl;
+				    cout << "  1. Insertar administrador" << endl;
+				    cout << "  2. Eliminar administrador" << endl;
+				    cout << "  3. Buscar administrador" << endl;
+				    cout << "  4. Modificar administrador" << endl;
+				    cout << "  5. Mostrar administradores" << endl;
+				    cout << "  6. Volver" << endl;
+				    
+				    cout << "\nIngrese la opcion deseada: ";
+	        		cin >> opcion2;
+	        		
+	        		switch (opcion2)
+					{
+		        		case 1:
+						{
+			                int cedula, codCiudad;
+			                string nombre, telefono, correo;
+			                
+			                cout << "Ingrese la cedula del administrador: "; cin >> cedula;
+			                cout << "Ingrese el nombre del administrador: "; cin.ignore(); getline(cin, nombre);
+			                cout << "Ingrese el codigo de la ciudad del administrador: "; cin >> codCiudad;
+			                cout << "Ingrese el telefono del administrador: "; cin >> telefono;
+			                cout << "Ingrese el correo del administrador: "; cin >> correo;
+			                
+							hashAdmins.insertarAdmin(cedula, nombre, codCiudad, telefono, correo);
+			                break;
+			            }
+			            case 2:
+						{
+			                int cedulaAEliminar;
+			                
+							cout << "Ingrese la cedula del administrador a eliminar: "; cin >> cedulaAEliminar;
+			                
+							hashAdmins.eliminarAdmin(cedulaAEliminar);
+			                break;
+			            }
+			            case 3:
+						{
+			                int cedulaABuscar;
+			                
+							cout << "Ingrese la cedula del administrador a buscar: "; cin >> cedulaABuscar;
+			                
+							pnodoAdmin adminBuscado = hashAdmins.buscarAdmin(cedulaABuscar);
+							
+			                if (adminBuscado != NULL)
+							{
+			                    cout << "\nAdministrador encontrado:" << endl;
+			                    cout << "Cedula: " << adminBuscado->getCedula() << endl;
+			                    cout << "Nombre: " << adminBuscado->getNombre() << endl;
+			                    cout << "Ciudad: " << adminBuscado->getCodCiudad() << endl;
+			                    cout << "Telefono: " << adminBuscado->getTelefono() << endl;
+			                    cout << "Correo: " << adminBuscado->getCorreo() << endl;
+			                }
+							else
+			                    cout << "\nAdministrador con cedula " << cedulaABuscar << " no encontrado." << endl;
+			                break;
+			            }
+			            case 4:
+						{
+			                int cedulaAModificar, codCiudad;
+			                string nombre, telefono, correo;
+			                
+			                cout << "Ingrese la cedula del administrador a modificar: "; cin >> cedulaAModificar;
+			                cout << "Ingrese el nuevo nombre del administrador: "; cin.ignore(); getline(cin, nombre);
+			                cout << "Ingrese el nuevo codigo de la ciudad del administrador: "; cin >> codCiudad;
+			                cout << "Ingrese el nuevo telefono del administrador: "; cin >> telefono;
+			                cout << "Ingrese el nuevo correo del administrador: "; cin >> correo;
+			                
+			                hashAdmins.modificarAdmin(cedulaAModificar, nombre, codCiudad, telefono, correo);
+			                break;
+			            }
+			            case 5:
+						{
+			                cout << "\nAdministradores:" << endl;
+			                hashAdmins.mostrarHash();
+			                break;
+			            }
+			            case 6: cout << endl; break;
+			            default: cout << "Ingrese una opcion valida.\n" << endl;
+		        	}
+				} while (opcion2 != 6);
+				
+				break;
+			}
+            case 7: // Ciudad
+            case 8: // Salir
+            {
+                cout << "Saliendo del programa...\n" << endl;
+                break;
+            }
+            default: cout << "Ingrese una opcion valida.\n" << endl;
+		}
+    } while (opcion != 8);
 
     return 0;
 }

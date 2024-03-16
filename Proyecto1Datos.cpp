@@ -692,16 +692,21 @@ private:
 
 bool ListaCircularDMarcasProductos::marcaRepetida(int codMarca) const
 {
+    if (ListaVacia())
+        return false; // La lista está vacía, por lo que no hay marcas repetidas
+
     pnodoMarcaProducto aux = primero;
 
-    while (aux != NULL)
-    {
+    do
+	{
         if (aux->codMarca == codMarca)
+            // El código de marca ya existe en la lista
             return true;
-        
+            
         aux = aux->siguiente;
-    }
+    } while (aux != primero);
 
+    // El código de marca no está repetido en la lista
     return false;
 }
 
@@ -713,21 +718,21 @@ void ListaCircularDMarcasProductos::insertarMarcaMenu(int codPasillo, int codPro
         cout << "El pasillo no existe en la lista simple de pasillos." << endl;
         return;
     }
-
+    cout << "El pasillo existe en la lista simple de pasillos." << endl;
     // Valida si el producto existe en la lista doble de productos
     if (!ProductosPas.productoRepetido(codProducto))
     {
         cout << "El producto no existe en la lista doble de productos." << endl;
         return;
     }
-
+    cout << "El producto existe en la lista doble de productos." << endl;
     // Valida si el codMarca está repetido en la lista circular doble de marcas
     if (marcaRepetida(codMarca))
     {
         cout << "El codigo de marca ya existe en la lista circular doble de marcas." << endl;
         return;
     }
-
+    cout << "El codigo de marca no existe en la lista circular doble de marcas." << endl;
     // Inserta en la lista circular doble de marcas después de las validaciones
     InsertarInicio(codPasillo, codProducto, codMarca, nombre, cantidadGondola, precio);
     cout << "Marca insertada en el menu de marcas exitosamente." << endl;
