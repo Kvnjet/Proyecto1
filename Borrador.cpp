@@ -78,8 +78,14 @@ void ListaSimplePas::insertarPasillo(int codPasillo, string nombre)
     }
 
     if (repetido == false)
-        // Si no existe, inserta al inicio
+    {
+        // Si no existe, inserta al final
         InsertarFinal(codPasillo, nombre);
+        cout << "\nPasillo insertado exitosamente." << endl;
+        cout << "Pasillo insertado:" << endl;
+        cout << " --> CodPasillo: " << codPasillo << endl;
+        cout << "     Nombre: " << nombre << endl;
+    }
     else
         cout << "\nEl pasillo ya existe en la lista." << endl;
 }
@@ -157,6 +163,8 @@ void ListaSimplePas::modificarPasillo(int codPasillo, string nombre)
 
     pasillo->codPasillo = codPasillo;
     pasillo->nombre = nombre;
+
+    cout << "\nPasillo modificado exitosamente." << endl; 
 }
 
 
@@ -308,8 +316,6 @@ void ListaSimplePas::Mostrar()
 
         aux = aux->siguiente;
     }
-
-    cout << endl;
 }
 
 int ListaSimplePas::largoLista()
@@ -331,7 +337,7 @@ int ListaSimplePas::largoLista()
 class NodoProPasillo
 {
 public:
-    NodoProPasillo(int _codPasillo, int _codProducto, const string& _nombre)
+    NodoProPasillo(int _codPasillo, int _codProducto, string _nombre)
     {
         codPasillo = _codPasillo;
         codProducto = _codProducto;
@@ -340,7 +346,7 @@ public:
         anterior = NULL;
     }
     
-    NodoProPasillo(int _codPasillo, int _codProducto, const string& _nombre, NodoProPasillo* _siguiente)
+    NodoProPasillo(int _codPasillo, int _codProducto, string _nombre, NodoProPasillo* _siguiente)
     {
         codPasillo = _codPasillo;
         codProducto = _codProducto;
@@ -368,27 +374,29 @@ public:
     ListaDobleProPasillos() { primero = NULL; }
     ~ListaDobleProPasillos();
 
-    void InsertarInicio(int codPasillo, int codProducto, const string& nombre);
-    void InsertarFinal(int codPasillo, int codProducto, const string& nombre);
-    void InsertarPos(int codPasillo, int codProducto, const string& nombre, int pos);
+    void InsertarInicio(int codPasillo, int codProducto, string nombre);
+    void InsertarFinal(int codPasillo, int codProducto, string nombre);
+    void InsertarPos(int codPasillo, int codProducto, string nombre, int pos);
     bool ListaVacia() { return primero == NULL; }
     void BorrarInicio();
     void BorrarFinal();
     void BorrarPosicion(int pos);
     void Mostrar();
     int largoLista();
-    void insertarMenuProPasillo(int codPasillo, int codProducto, const string& nombre, ListaSimplePas& listaSimplePasillo);
-    bool productoRepetido(int codProducto) const;
-    void eliminarProducto(int codProducto);
+    void insertarProPasillo(int codPasillo, int codProducto, string nombre, ListaSimplePas& listaPasillos);
+    bool productoRepetido(int codProducto);
+    void eliminarProPasillo(int codProducto);
+    // Funcion de busqueda
+    void modificarProPasillo(int codPasillo, int codProducto, string nombre, ListaSimplePas& listaPasillos);
 
 private:
     pnodoProPasillo primero;
 };
 
-void ListaDobleProPasillos::insertarMenuProPasillo(int codPasillo, int codProducto, const string& nombre, ListaSimplePas &listaSimplePasillos)
+void ListaDobleProPasillos::insertarProPasillo(int codPasillo, int codProducto, string nombre, ListaSimplePas& listaPasillos)
 {
     // Verifica si el pasillo existe en la lista simple
-    if (listaSimplePasillos.pasilloRepetido(codPasillo))
+    if (listaPasillos.pasilloRepetido(codPasillo))
     {
         if (!productoRepetido(codProducto))
             // Inserta al inicio después de las validaciones
@@ -396,7 +404,7 @@ void ListaDobleProPasillos::insertarMenuProPasillo(int codPasillo, int codProduc
     }
 }
 
-bool ListaDobleProPasillos::productoRepetido(int codProducto) const
+bool ListaDobleProPasillos::productoRepetido(int codProducto)
 {
     pnodoProPasillo aux = primero;
 
@@ -413,7 +421,7 @@ bool ListaDobleProPasillos::productoRepetido(int codProducto) const
     return false;
 }
 
-void ListaDobleProPasillos::eliminarProducto(int codProducto)
+void ListaDobleProPasillos::eliminarProPasillo(int codProducto)
 {
     if (ListaVacia())
     {
@@ -450,6 +458,23 @@ void ListaDobleProPasillos::eliminarProducto(int codProducto)
     cout << "No se encontro el producto con el codigo dado." << endl;
 }
 
+//void ListaDobleProPasillos::modificarProPasillo(int codPasillo, int codProducto, string nombre, ListaSimplePas& listaPasillos)
+//{
+//	pnodoProPasillo proPasillo = buscarProPasillo(codProducto);
+//
+//    if (proPasillo == NULL)
+//    {
+//        cout << "\nProducto no encontrado." << endl;
+//        return;
+//    }
+//
+//    proPasillo->codPasillo = codPasillo;
+//    proPasillo->codProducto = codProducto;
+//    proPasillo->nombre = nombre;
+//    proPasillo->listaPasillos = listaPasillos;
+//}
+
+
 ListaDobleProPasillos::~ListaDobleProPasillos()
 {
     pnodoProPasillo aux;
@@ -464,7 +489,7 @@ ListaDobleProPasillos::~ListaDobleProPasillos()
     primero = NULL;
 }
 
-void ListaDobleProPasillos::InsertarInicio(int codPasillo, int codProducto, const string& nombre)
+void ListaDobleProPasillos::InsertarInicio(int codPasillo, int codProducto, string nombre)
 {
     if (ListaVacia())
     {
@@ -478,7 +503,7 @@ void ListaDobleProPasillos::InsertarInicio(int codPasillo, int codProducto, cons
     }
 }
 
-void ListaDobleProPasillos::InsertarFinal(int codPasillo, int codProducto, const string& nombre)
+void ListaDobleProPasillos::InsertarFinal(int codPasillo, int codProducto, string nombre)
 {
     if (ListaVacia())
     {
@@ -497,7 +522,7 @@ void ListaDobleProPasillos::InsertarFinal(int codPasillo, int codProducto, const
     }
 }
 
-void ListaDobleProPasillos::InsertarPos(int codPasillo, int codProducto, const string& nombre, int pos)
+void ListaDobleProPasillos::InsertarPos(int codPasillo, int codProducto, string nombre, int pos)
 {
     if (ListaVacia())
     {
@@ -642,8 +667,6 @@ void ListaDobleProPasillos::Mostrar()
         
 		aux = aux->siguiente;
     }
-
-    cout << endl;
 }
 
 int ListaDobleProPasillos::largoLista()
@@ -672,7 +695,7 @@ int ListaDobleProPasillos::largoLista()
 class NodoMarcaProducto
 {
 public:
-    NodoMarcaProducto(int _codPasillo, int _codProducto, int _codMarca, const string& _nombre, int _cantGondola, int _precio)
+    NodoMarcaProducto(int _codPasillo, int _codProducto, int _codMarca, string _nombre, int _cantGondola, int _precio)
     {
         codPasillo = _codPasillo;
         codProducto = _codProducto;
@@ -706,24 +729,44 @@ public:
     ListaCircularDMarcasProductos() { primero = NULL; }
     ~ListaCircularDMarcasProductos();
 
-    void InsertarInicio(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio);
-    void InsertarFinal(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio);
-    void InsertarPos(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio, int pos);
-    bool ListaVacia() const { return primero == NULL; }
+    void InsertarInicio(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio);
+    void InsertarFinal(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio);
+    void InsertarPos(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, int pos);
+    bool ListaVacia() { return primero == NULL; }
     void BorrarInicio();
     void BorrarFinal();
     void BorrarPosicion(int pos);
-    void Mostrar() const;
-    int largoLista() const;
-    bool marcaRepetida(int codMarca) const;
-    void insertarMarcaMenu(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio, ListaSimplePas&ListaPasillo, ListaDobleProPasillos&ProductosPas);
-    void eliminarMarcas();
+    void Mostrar();
+    int largoLista();
+    void insertarMarcaProducto(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos);
+    bool marcaProductoRepetida(int codMarca);
+    void eliminarMarcasProductos();
+    // Función de búsqueda
+    void modificarMarcaProducto(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos);
 
 private:
     pnodoMarcaProducto primero;
 };
 
-bool ListaCircularDMarcasProductos::marcaRepetida(int codMarca) const
+void ListaCircularDMarcasProductos::insertarMarcaProducto(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos)
+{
+    // Valida si el pasillo existe en la lista simple de pasillos
+    if (!listaPasillos.pasilloRepetido(codPasillo))
+        return;
+
+    // Valida si el producto existe en la lista doble de productos
+    if (!listaProductos.productoRepetido(codProducto))
+        return;
+
+    // Valida si el codMarca está repetido en la lista circular doble de marcas
+    if (marcaProductoRepetida(codMarca))
+        return;
+    
+    // Inserta en la lista circular doble de marcas después de las validaciones
+    InsertarFinal(codPasillo, codProducto, codMarca, nombre, cantGondola, precio);
+}
+
+bool ListaCircularDMarcasProductos::marcaProductoRepetida(int codMarca)
 {
     if (ListaVacia())
         return false; // La lista está vacía, por lo que no hay marcas repetidas
@@ -743,25 +786,7 @@ bool ListaCircularDMarcasProductos::marcaRepetida(int codMarca) const
     return false;
 }
 
-void ListaCircularDMarcasProductos::insertarMarcaMenu(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas)
-{
-    // Valida si el pasillo existe en la lista simple de pasillos
-    if (!ListaPasillo.pasilloRepetido(codPasillo))
-        return;
-
-    // Valida si el producto existe en la lista doble de productos
-    if (!ProductosPas.productoRepetido(codProducto))
-        return;
-
-    // Valida si el codMarca está repetido en la lista circular doble de marcas
-    if (marcaRepetida(codMarca))
-        return;
-    
-    // Inserta en la lista circular doble de marcas después de las validaciones
-    InsertarFinal(codPasillo, codProducto, codMarca, nombre, cantGondola, precio);
-}
-
-void ListaCircularDMarcasProductos::eliminarMarcas()
+void ListaCircularDMarcasProductos::eliminarMarcasProductos()
 {
     if (ListaVacia())
     {
@@ -783,6 +808,27 @@ void ListaCircularDMarcasProductos::eliminarMarcas()
     cout << "Todos los nodos han sido eliminados." << endl;
 }
 
+//void ListaCircularDMarcasProductos::modificarMarcaProducto(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos)
+//{
+//    pnodoMarcaProducto marcaProducto = buscarMarcaProducto(codMarca);
+//
+//    if (marcaProducto == NULL)
+//    {
+//        cout << "\nMarca no encontrada." << endl;
+//        return;
+//    }
+//
+//    marcaProducto->codPasillo = codPasillo;
+//    marcaProducto->codProducto = codProducto;
+//    marcaProducto->codMarca = codMarca;
+//    marcaProducto->nombre = nombre;
+//    marcaProducto->cantGondola = cantGondola;
+//    marcaProducto->precio = precio;
+//    marcaProducto->listaPasillos = listaPasillos;
+//    marcaProducto->listaProductos = listaProductos;
+//}
+
+
 ListaCircularDMarcasProductos::~ListaCircularDMarcasProductos()
 {
     if (primero != NULL)
@@ -801,7 +847,7 @@ ListaCircularDMarcasProductos::~ListaCircularDMarcasProductos()
     }
 }
 
-void ListaCircularDMarcasProductos::InsertarInicio(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio)
+void ListaCircularDMarcasProductos::InsertarInicio(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio)
 {
     pnodoMarcaProducto nuevo = new NodoMarcaProducto(codPasillo, codProducto, codMarca, nombre, cantGondola, precio);
 
@@ -821,7 +867,7 @@ void ListaCircularDMarcasProductos::InsertarInicio(int codPasillo, int codProduc
     }
 }
 
-void ListaCircularDMarcasProductos::InsertarFinal(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio)
+void ListaCircularDMarcasProductos::InsertarFinal(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio)
 {
     pnodoMarcaProducto nuevo = new NodoMarcaProducto(codPasillo, codProducto, codMarca, nombre, cantGondola, precio);
 
@@ -840,7 +886,7 @@ void ListaCircularDMarcasProductos::InsertarFinal(int codPasillo, int codProduct
     }
 }
 
-void ListaCircularDMarcasProductos::InsertarPos(int codPasillo, int codProducto, int codMarca, const string& nombre, int cantGondola, int precio, int pos)
+void ListaCircularDMarcasProductos::InsertarPos(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, int pos)
 {
     if (ListaVacia() || pos <= 1)
         InsertarInicio(codPasillo, codProducto, codMarca, nombre, cantGondola, precio);
@@ -949,7 +995,7 @@ void ListaCircularDMarcasProductos::BorrarPosicion(int pos)
     }
 }
 
-void ListaCircularDMarcasProductos::Mostrar() const
+void ListaCircularDMarcasProductos::Mostrar()
 {
     if (ListaVacia())
         cout << "La lista esta vacia." << endl;
@@ -976,7 +1022,7 @@ void ListaCircularDMarcasProductos::Mostrar() const
     }
 }
 
-int ListaCircularDMarcasProductos::largoLista() const
+int ListaCircularDMarcasProductos::largoLista()
 {
     if (ListaVacia())
         return 0;
@@ -1000,9 +1046,18 @@ int ListaCircularDMarcasProductos::largoLista() const
 class NodoInventario
 {
 public:
-    NodoInventario(int _codPasillo, int _codProducto, int _codMarca, int _codInventario, const string& _nombre, int _cantidadStock, bool _codigoCanasta)
-        : codPasillo(_codPasillo), codProducto(_codProducto), codMarca(_codMarca), codInventario(_codInventario),
-        nombre(_nombre), cantidadStock(_cantidadStock), codigoCanasta(_codigoCanasta), siguiente(NULL), anterior(NULL) {}
+    NodoInventario(int _codPasillo, int _codProducto, int _codMarca, int _codInventario, string _nombre, int _cantStock, bool _codCanasta)
+    {
+        codPasillo = _codPasillo;
+        codProducto = _codProducto;
+        codMarca = _codMarca;
+        codInventario = _codInventario;
+        nombre = _nombre;
+        cantStock = _cantStock;
+        codCanasta = _codCanasta;
+        siguiente = NULL;
+        anterior = NULL;
+    }
 
 private:
     int codPasillo;
@@ -1010,8 +1065,8 @@ private:
     int codMarca;
     int codInventario;
     string nombre;
-    int cantidadStock;
-    bool codigoCanasta;
+    int cantStock;
+    bool codCanasta;
     NodoInventario* siguiente;
     NodoInventario* anterior;
 
@@ -1024,49 +1079,51 @@ typedef NodoInventario* pnodoInventario;
 class ListaDobleInventario
 {
 public:
-    ListaDobleInventario() : primero(NULL) {}
+    ListaDobleInventario() { primero = NULL; }
     ~ListaDobleInventario();
 
-    void InsertarInicio(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta);
-    void InsertarFinal(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta);
-    void InsertarPos(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta, int pos);
-    bool ListaVacia() const { return primero == NULL; }
+    void InsertarInicio(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta);
+    void InsertarFinal(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta);
+    void InsertarPos(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, int pos);
+    bool ListaVacia() { return primero == NULL; }
     void BorrarInicio();
     void BorrarFinal();
     void BorrarPosicion(int pos);
-    void Mostrar() const;
-    int largoLista() const;
-    void insertarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas, ListaCircularDMarcasProductos&Marcas);
-    bool listaInventarioRepetido(int codInventario) const;
-    void eliminarInventario(int codInventario, ListaSimplePas& listaPasillo);
+    void Mostrar();
+    int largoLista();
+    void insertarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcasProductos);
+    bool inventarioRepetido(int codInventario);
+    void eliminarInventario(int codInventario, ListaSimplePas& listaPasillos);
+    // Función de búsqueda
+    void modificarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcasProductos);
 
 private:
     pnodoInventario primero;
 };
 
-void ListaDobleInventario::insertarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta, ListaSimplePas& ListaPasillo, ListaDobleProPasillos& ProductosPas, ListaCircularDMarcasProductos& Marcas)
+void ListaDobleInventario::insertarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcasProductos)
 {
     // Valida si el codPasillo existe en la lista simple de pasillos
-    if (ListaPasillo.pasilloRepetido(codPasillo) == false)
+    if (listaPasillos.pasilloRepetido(codPasillo) == false)
         return;
 
     // Valida si el codProducto existe en la lista doble de productos de pasillo
-    if (ProductosPas.productoRepetido(codProducto) == false)
+    if (listaProductos.productoRepetido(codProducto) == false)
         return;
 
     // Valida si el codMarca existe en la lista circular de marcas de productos
-    if (!Marcas.marcaRepetida(codMarca))
+    if (!listaMarcasProductos.marcaProductoRepetida(codMarca))
         return;
 
     // Valida si el codInventario no está repetido en la lista doble de inventario
-    if (listaInventarioRepetido(codInventario))
+    if (inventarioRepetido(codInventario))
         return;
 
     // Inserta en la lista doble de inventario después de las validaciones
-    InsertarFinal(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+    InsertarFinal(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
 }
 
-bool ListaDobleInventario::listaInventarioRepetido(int codInventario) const
+bool ListaDobleInventario::inventarioRepetido(int codInventario)
 {
     pnodoInventario aux = primero;
 
@@ -1083,7 +1140,7 @@ bool ListaDobleInventario::listaInventarioRepetido(int codInventario) const
     return false;
 }
 
-void ListaDobleInventario::eliminarInventario(int codInventario, ListaSimplePas& listaPasillo)
+void ListaDobleInventario::eliminarInventario(int codInventario, ListaSimplePas& listaPasillos)
 {
     if (ListaVacia())
     {
@@ -1101,7 +1158,7 @@ void ListaDobleInventario::eliminarInventario(int codInventario, ListaSimplePas&
             int codPasillo = actual->codPasillo;
 
             // Verifica si el codPasillo existe en la lista simple de pasillos
-            if (listaPasillo.pasilloRepetido(codPasillo))
+            if (listaPasillos.pasilloRepetido(codPasillo))
             {
                 cout << "El producto se mantiene en el pasillo." << endl;
                 return;
@@ -1121,6 +1178,29 @@ void ListaDobleInventario::eliminarInventario(int codInventario, ListaSimplePas&
     cout << "No se encontro el producto con el codigo de inventario dado." << endl;
 }
 
+//void ListaDobleInventario::modificarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcasProductos)
+//{
+//    pnodoInventario inventario = buscarInventario(codInventario);
+//
+//    if (inventario == NULL)
+//    {
+//        cout << "\nInventario no encontrado." << endl;
+//        return;
+//    }
+//
+//    inventario->codPasillo = codPasillo;
+//    inventario->codProducto = codProducto;
+//    inventario->codMarca = codMarca;
+//    inventario->codInventario = codInventario;
+//    inventario->nombre = nombre;
+//    inventario->cantStock = cantStock;
+//    inventario->codCanasta = codCanasta;
+//    inventario->listaPasillos = listaPasillos;
+//    inventario->listaProductos = listaProductos;
+//    inventario->listaMarcasProductos = listaMarcasProductos;
+//}
+
+
 ListaDobleInventario::~ListaDobleInventario()
 {
     pnodoInventario aux;
@@ -1135,27 +1215,27 @@ ListaDobleInventario::~ListaDobleInventario()
     primero = NULL;
 }
 
-void ListaDobleInventario::InsertarInicio(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta)
+void ListaDobleInventario::InsertarInicio(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta)
 {
     if (ListaVacia())
     {
-        primero = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+        primero = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
         primero->anterior = NULL;
     }
     else
     {
-        pnodoInventario nuevo = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+        pnodoInventario nuevo = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
         nuevo->siguiente = primero;
         primero->anterior = nuevo;
         primero = nuevo;
     }
 }
 
-void ListaDobleInventario::InsertarFinal(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta)
+void ListaDobleInventario::InsertarFinal(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta)
 {
     if (ListaVacia())
     {
-        primero = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+        primero = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
         primero->anterior = NULL;
     }
     else
@@ -1165,23 +1245,23 @@ void ListaDobleInventario::InsertarFinal(int codPasillo, int codProducto, int co
         while (aux->siguiente != NULL)
             aux = aux->siguiente;
 
-        aux->siguiente = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+        aux->siguiente = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
         aux->siguiente->anterior = aux;
     }
 }
 
-void ListaDobleInventario::InsertarPos(int codPasillo, int codProducto, int codMarca, int codInventario, const string& nombre, int cantidadStock, bool codigoCanasta, int pos)
+void ListaDobleInventario::InsertarPos(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, int pos)
 {
     if (ListaVacia())
     {
-        primero = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+        primero = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
         primero->anterior = NULL;
     }
     else
     {
         if (pos <= 1)
         {
-            pnodoInventario nuevo = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+            pnodoInventario nuevo = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
             nuevo->siguiente = primero;
 
             if (primero != NULL)
@@ -1200,7 +1280,7 @@ void ListaDobleInventario::InsertarPos(int codPasillo, int codProducto, int codM
                 aux = aux->siguiente;
             }
 
-            pnodoInventario nuevo = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantidadStock, codigoCanasta);
+            pnodoInventario nuevo = new NodoInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
             nuevo->siguiente = aux->siguiente;
 
             if (aux->siguiente != NULL)
@@ -1297,30 +1377,28 @@ void ListaDobleInventario::BorrarPosicion(int pos)
     }
 }
 
-void ListaDobleInventario::Mostrar() const
+void ListaDobleInventario::Mostrar()
 {
     pnodoInventario aux = primero;
 
     while (aux) {
         // cout << aux->codPasillo << ", " << aux->codProducto << ", " << aux->codMarca
-        //     << ", " << aux->codInventario << ", " << aux->nombre << ", " << aux->cantidadStock
-        //     << ", " << aux->codigoCanasta << " --> " << endl;
+        //     << ", " << aux->codInventario << ", " << aux->nombre << ", " << aux->cantStock
+        //     << ", " << aux->codCanasta << " --> " << endl;
             
         cout << "--> CodPasillo: " << aux->codPasillo << endl;
 		cout << "    CodProducto: " << aux->codProducto << endl;
 		cout << "    CodMarca: " << aux->codMarca << endl;
 		cout << "    CodInventario: " << aux->codInventario << endl;
 		cout << "    Nombre: " << aux->nombre << endl;
-		cout << "    CantStock: " << aux->cantidadStock << endl;
-		cout << "    CodCanasta: " << aux->codigoCanasta << endl << endl;
+		cout << "    CantStock: " << aux->cantStock << endl;
+		cout << "    CodCanasta: " << aux->codCanasta << endl << endl;
 
         aux = aux->siguiente;
     }
-
-    cout << endl;
 }
 
-int ListaDobleInventario::largoLista() const
+int ListaDobleInventario::largoLista()
 {
     int cont = 0;
     pnodoInventario aux = primero;
@@ -1339,7 +1417,7 @@ int ListaDobleInventario::largoLista() const
 class NodoCiudad
 {
 public:
-    NodoCiudad(int _codCiudad, const string& _nombre)
+    NodoCiudad(int _codCiudad, string _nombre)
     {
         codCiudad = _codCiudad;
         nombre = _nombre;
@@ -1363,24 +1441,35 @@ public:
     ListaCircularCiudades() { primero = NULL; }
     ~ListaCircularCiudades();
 
-    void InsertarInicio(int codCiudad, const string& nombre);
-    void InsertarFinal(int codCiudad, const string& nombre);
-    void InsertarPos(int codCiudad, const string& nombre, int pos);
-    bool ListaVacia() const { return primero == NULL; }
+    void InsertarInicio(int codCiudad, string nombre);
+    void InsertarFinal(int codCiudad, string nombre);
+    void InsertarPos(int codCiudad, string nombre, int pos);
+    bool ListaVacia() { return primero == NULL; }
     void BorrarInicio();
     void BorrarFinal();
     void BorrarPosicion(int pos);
-    void Mostrar() const;
-    int largoLista() const;
-    bool ciudadRepetida(int codCiudad) const;
-    void insertarCiudadMenu(int codCiudad, const string& nombre);
+    void Mostrar();
+    int largoLista();
+    void insertarCiudad(int codCiudad, string nombre);
+    bool ciudadRepetida(int codCiudad);    
     void eliminarCiudad(int codCiudad);
+    // Función de búsqueda
+    void modificarCiudad(int codCiudad, string nombre);
 
 private:
     pnodoCiudad primero;
 };
 
-bool ListaCircularCiudades::ciudadRepetida(int codCiudad) const
+void ListaCircularCiudades::insertarCiudad(int codCiudad, string nombre)
+{
+    // Valida si el codCiudad no está repetido
+    if (ciudadRepetida(codCiudad) == false)
+        InsertarInicio(codCiudad, nombre);
+    else
+        cout << "El codigo de ciudad ya existe en la lista." << endl;
+}
+
+bool ListaCircularCiudades::ciudadRepetida(int codCiudad)
 {
     if (ListaVacia())
         return false; // La lista está vacía, no hay ciudades repetidas
@@ -1398,15 +1487,6 @@ bool ListaCircularCiudades::ciudadRepetida(int codCiudad) const
 
     // El código de ciudad no está repetido en la lista
     return false;
-}
-
-void ListaCircularCiudades::insertarCiudadMenu(int codCiudad, const string& nombre)
-{
-    // Valida si el codCiudad no está repetido
-    if (ciudadRepetida(codCiudad) == false)
-        InsertarInicio(codCiudad, nombre);
-    else
-        cout << "El codigo de ciudad ya existe en la lista." << endl;
 }
 
 void ListaCircularCiudades::eliminarCiudad(int codCiudad)
@@ -1438,6 +1518,24 @@ void ListaCircularCiudades::eliminarCiudad(int codCiudad)
     cout << "No se encontro la ciudad con el codigo dado." << endl;
 }
 
+//void ListaCircularCiudades::modificarCiudad(int codCiudad, string nombre)
+//{
+//    // Busca la ciudad con el código dado
+//    pnodoCiudad ciudad = buscarCiudad(codCiudad);
+//
+//    // Verifica si la ciudad no existe
+//    if (ciudad == NULL)
+//    {
+//        cout << "\nCiudad no encontrada." << endl;
+//        return;
+//    }
+//
+//    // Modificar los atributos de la ciudad encontrado
+//    ciudad->codCiudad = codCiudad;
+//    ciudad->nombre = nombre;
+//}
+
+
 ListaCircularCiudades::~ListaCircularCiudades()
 {
     if (primero != NULL)
@@ -1455,7 +1553,7 @@ ListaCircularCiudades::~ListaCircularCiudades()
     }
 }
 
-void ListaCircularCiudades::InsertarInicio(int codCiudad, const string& nombre)
+void ListaCircularCiudades::InsertarInicio(int codCiudad, string nombre)
 {
     pnodoCiudad nuevo = new NodoCiudad(codCiudad, nombre);
 
@@ -1471,7 +1569,7 @@ void ListaCircularCiudades::InsertarInicio(int codCiudad, const string& nombre)
     }
 }
 
-void ListaCircularCiudades::InsertarFinal(int codCiudad, const string& nombre)
+void ListaCircularCiudades::InsertarFinal(int codCiudad, string nombre)
 {
     pnodoCiudad nuevo = new NodoCiudad(codCiudad, nombre);
 
@@ -1488,7 +1586,7 @@ void ListaCircularCiudades::InsertarFinal(int codCiudad, const string& nombre)
     }
 }
 
-void ListaCircularCiudades::InsertarPos(int codCiudad, const string& nombre, int pos)
+void ListaCircularCiudades::InsertarPos(int codCiudad, string nombre, int pos)
 {
     if (ListaVacia() || pos <= 1)
         InsertarInicio(codCiudad, nombre);
@@ -1593,7 +1691,7 @@ void ListaCircularCiudades::BorrarPosicion(int pos)
     }
 }
 
-void ListaCircularCiudades::Mostrar() const
+void ListaCircularCiudades::Mostrar()
 {
     if (ListaVacia())
         cout << "La lista esta vacia." << endl;
@@ -1610,12 +1708,10 @@ void ListaCircularCiudades::Mostrar() const
 
             aux = aux->siguiente;
         } while (aux != primero);
-
-        cout << endl;
     }
 }
 
-int ListaCircularCiudades::largoLista() const
+int ListaCircularCiudades::largoLista()
 {
     if (ListaVacia())
         return 0;
@@ -1687,31 +1783,30 @@ public:
     HashingClientes(int N); // Constructor
     ~HashingClientes();     // Destructor
 
-	int funcionHash(int cedula) { return cedula % tamTabla; }
+	int funcionHash(int cedula) { return cedula % 13; }
     void insertarCliente(int cedula, string nombre, int codCiudad, string telefono, string correo);
     void eliminarCliente(int cedula);
     pnodoCte buscarCliente(int cedula);
     void modificarCliente(int cedula, string nombre, int codCiudad, string telefono, string correo);
     void mostrarHash();
-    bool validarCliente(const string& nombre, int cedula);
+    bool loginCliente(int cedula);
 
 private:
-	static const int tamTabla = 13;
-    pnodoCte* tablaHash; // Puntero al arreglo que contiene los clientes
+	pnodoCte* tablaHash; // Puntero al arreglo que contiene los clientes
 };
 
 HashingClientes::HashingClientes(int N)
 {
-    tablaHash = new pnodoCte[tamTabla]();
+    tablaHash = new pnodoCte[13]();
 
     // Inicializa la tabla hash con NULL
-    for (int i = 0; i < tamTabla; i++)
+    for (int i = 0; i < 13; i++)
         tablaHash[i] = NULL;
 }
 
 HashingClientes::~HashingClientes()
 {
-    for (int i = 0; i < tamTabla; i++)
+    for (int i = 0; i < 13; i++)
     {
         pnodoCte actual = tablaHash[i];
 
@@ -1808,7 +1903,7 @@ void HashingClientes::modificarCliente(int cedula, string nombre, int codCiudad,
 
 void HashingClientes::mostrarHash()
 {
-    for (int i = 0; i < tamTabla; ++i)
+    for (int i = 0; i < 13; ++i)
     {
         cout << i;
         pnodoCte actual = tablaHash[i];
@@ -1823,38 +1918,17 @@ void HashingClientes::mostrarHash()
 			
             actual = actual->siguiente;
         }
-        
-        if (tablaHash[i] == 0)
-			cout << " No hay clientes." << endl;
 
         cout << endl;
     }
 }
 
-bool HashingClientes::validarCliente(const string& nombre, int cedula) {
-    NodoCliente* cliente = buscarCliente(cedula);
+bool HashingClientes::loginCliente(int cedula)
+{
+    pnodoCte cliente = buscarCliente(cedula);
 
-    if (cliente != NULL) {
-        cout << "Cliente encontrado en la tabla hash." << endl;
-        cout << "Nombre ingresado (longitud): " << nombre.length() << endl;
-        cout << "Nombre en la tabla hash (longitud): " << cliente->nombre.length() << endl;
-        cout << "Nombre ingresado: " << nombre << endl;
-        cout << "Nombre en la tabla hash: " << cliente->nombre << endl;
-        cout << "Cedula en la tabla hash: " << cliente->cedula << endl;
-    } else {
-        cout << "Cliente no encontrado en la tabla hash." << endl;
-    }
-
-    if (cliente != NULL && cliente->nombre == nombre && cliente->cedula == cedula) {
-        cout << "Credenciales válidas." << endl;
-        return true; // Inicio de sesión exitoso
-    }
-
-    cout << "Credenciales inválidas." << endl;
-    return false; // Inicio de sesión fallido
+    return ((cliente != NULL) && (cliente->cedula == cedula));
 }
-
-
 
 
 
@@ -1909,31 +1983,30 @@ public:
     HashingAdmins(int N); // Constructor
     ~HashingAdmins();     // Destructor
 
-	int funcionHash(int cedula) { return cedula % tamTabla; }
+	int funcionHash(int cedula) { return cedula % 13; }
     void insertarAdmin(int cedula, string nombre, int codCiudad, string telefono, string correo);
     void eliminarAdmin(int cedula);
     pnodoAdmin buscarAdmin(int cedula);
     void modificarAdmin(int cedula, string nombre, int codCiudad, string telefono, string correo);
     void mostrarHash();
-    bool validarAdmin(int cedula, string nombre);
+    bool loginAdmin(int cedula);
 
 private:
-	static const int tamTabla = 13;
     pnodoAdmin* tablaHash; // Puntero al arreglo que contiene los administradores
 };
 
 HashingAdmins::HashingAdmins(int N)
 {
-    tablaHash = new pnodoAdmin[tamTabla]();
+    tablaHash = new pnodoAdmin[13]();
 
     // Inicializa la tabla hash con NULL
-    for (int i = 0; i < tamTabla; i++)
+    for (int i = 0; i < 13; i++)
         tablaHash[i] = NULL;
 }
 
 HashingAdmins::~HashingAdmins()
 {
-    for (int i = 0; i < tamTabla; i++)
+    for (int i = 0; i < 13; i++)
     {
         pnodoAdmin actual = tablaHash[i];
 
@@ -2030,7 +2103,7 @@ void HashingAdmins::modificarAdmin(int cedula, string nombre, int codCiudad, str
 
 void HashingAdmins::mostrarHash()
 {
-    for (int i = 0; i < tamTabla; ++i)
+    for (int i = 0; i < 13; ++i)
     {
         cout << i;
         pnodoAdmin actual = tablaHash[i];
@@ -2045,24 +2118,21 @@ void HashingAdmins::mostrarHash()
 			
             actual = actual->siguiente;
         }
-        
-        if (tablaHash[i] == 0)
-			cout << " No hay administradores." << endl;
 
         cout << endl;
     }
 }
 
-bool HashingAdmins::validarAdmin(int cedula, string nombre)
+bool HashingAdmins::loginAdmin(int cedula)
 {
     pnodoAdmin admin = buscarAdmin(cedula);
 
-    return ((admin != NULL) && (admin->cedula == cedula) && (admin->nombre == nombre));
+    return ((admin != NULL) && (admin->cedula == cedula));
 }
 
 
 
-// Función auxiliar para convertir de string a entero
+// Función que convierte un string a entero
 int stringAInt(string str)
 {
     istringstream iss(str);
@@ -2077,6 +2147,7 @@ int stringAInt(string str)
     return res;
 }
 
+// Función que convierte "1" o "0" a booleano 
 bool stringABool(string str)
 {
     istringstream iss(str);
@@ -2167,14 +2238,14 @@ void crearListaProductos(ListaDobleProPasillos& listaProductos, ListaSimplePas& 
             getline(ss, nombre, ';'); ss >> ws;
 
             // Inserta en la lista doble de productos después de las validaciones
-            listaProductos.insertarMenuProPasillo(stringAInt(codPasillo), stringAInt(codProducto), nombre, listaPasillos);
+            listaProductos.insertarProPasillo(stringAInt(codPasillo), stringAInt(codProducto), nombre, listaPasillos);
         }
     }
 
     archivo.close();
 }
 
-void crearListaMarcas(ListaCircularDMarcasProductos& listaMarcas, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos)
+void crearListaMarcasProductos(ListaCircularDMarcasProductos& listaMarcas, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos)
 {
     ifstream archivo("MarcasProductos.txt");
 
@@ -2210,7 +2281,7 @@ void crearListaMarcas(ListaCircularDMarcasProductos& listaMarcas, ListaSimplePas
             getline(ss, precio, ';'); ss >> ws;
 
             // Inserta en la lista circular doble de marcas después de las validaciones
-            listaMarcas.insertarMarcaMenu(stringAInt(codPasillo), stringAInt(codProducto), stringAInt(codMarca), nombre, stringAInt(cantGondola), stringAInt(precio), listaPasillos, listaProductos);
+            listaMarcas.insertarMarcaProducto(stringAInt(codPasillo), stringAInt(codProducto), stringAInt(codMarca), nombre, stringAInt(cantGondola), stringAInt(precio), listaPasillos, listaProductos);
         }
     }
 
@@ -2293,7 +2364,7 @@ void crearListaCiudades(ListaCircularCiudades& listaCiudades)
 	        getline(ss, nombre, ';'); ss >> ws;
 	
 	        // Inserta en la lista circular simple de ciudades después de las validaciones
-	        listaCiudades.insertarCiudadMenu(stringAInt(codCiudad), nombre);
+	        listaCiudades.insertarCiudad(stringAInt(codCiudad), nombre);
 	    }
 	}
 }
@@ -2402,12 +2473,12 @@ void menuCliente()
 
 
 void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos,
-	ListaCircularDMarcasProductos& listaMarcas, ListaDobleInventario& listaInventario,
+	ListaCircularDMarcasProductos& listaMarcasProductos, ListaDobleInventario& listaInventario,
 	HashingClientes& hashClientes, HashingAdmins& hashAdmins, ListaCircularCiudades& listaCiudades)
 {
 	do
     {
-        cout << "************INSERTAR:************" << endl;
+        cout << "\n************INSERTAR:************" << endl;
 	    cout << "1. Pasillo" << endl;
 	    cout << "2. Producto" << endl;
 	    cout << "3. Marca" << endl;
@@ -2430,7 +2501,7 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
                 cout << "Ingrese el nombre del pasillo: "; cin.ignore(); getline(cin, nombre);
                 
-				listaPasillos.insertarPasillo(codPasillo, nombre);
+				listaPasillos.insertarPasillo(codPasillo, nombre); 
 				break;
 			}
 
@@ -2484,12 +2555,12 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
 }
 
 void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos,
-	ListaCircularDMarcasProductos& listaMarcas, ListaDobleInventario& listaInventario,
+	ListaCircularDMarcasProductos& listaMarcasProductos, ListaDobleInventario& listaInventario,
 	HashingClientes& hashClientes, HashingAdmins& hashAdmins, ListaCircularCiudades& listaCiudades)
 {
 	do
     {
-        cout << "************ELIMINAR:************" << endl;
+        cout << "\n************ELIMINAR:************" << endl;
 	    cout << "1. Pasillo" << endl;
 	    cout << "2. Producto" << endl;
 	    cout << "3. Marca" << endl;
@@ -2508,9 +2579,15 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
             {
             	int pasilloAEliminar;
 				
+                cout << "\nPasillos:" << endl;
+                listaPasillos.Mostrar();
+
 				cout << "Ingrese el codigo del pasillo a eliminar: "; cin >> pasilloAEliminar;
                 
 				listaPasillos.eliminarPasillo(pasilloAEliminar);
+
+                cout << "\nPasillos:" << endl;
+                listaPasillos.Mostrar();
                 break;
             }
 
@@ -2554,12 +2631,12 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
 }
 
 void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos,
-	ListaCircularDMarcasProductos& listaMarcas, ListaDobleInventario& listaInventario,
+	ListaCircularDMarcasProductos& listaMarcasProductos, ListaDobleInventario& listaInventario,
 	HashingClientes& hashClientes, HashingAdmins& hashAdmins, ListaCircularCiudades& listaCiudades)
 {
 	do
     {
-        cout << "************BUSCAR:************" << endl;
+        cout << "\n************BUSCAR:************" << endl;
 	    cout << "1. Pasillo" << endl;
 	    cout << "2. Producto" << endl;
 	    cout << "3. Marca" << endl;
@@ -2657,12 +2734,12 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
 }
 
 void menuModificar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos,
-	ListaCircularDMarcasProductos& listaMarcas, ListaDobleInventario& listaInventario,
+	ListaCircularDMarcasProductos& listaMarcasProductos, ListaDobleInventario& listaInventario,
 	HashingClientes& hashClientes, HashingAdmins& hashAdmins, ListaCircularCiudades& listaCiudades)
 {
 	do
     {
-        cout << "************MODIFICAR:************" << endl;
+        cout << "\n************MODIFICAR:************" << endl;
 	    cout << "1. Pasillo" << endl;
 	    cout << "2. Producto" << endl;
 	    cout << "3. Marca" << endl;
@@ -2739,12 +2816,12 @@ void menuModificar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasil
 }
 
 void menuListar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos,
-	ListaCircularDMarcasProductos& listaMarcas, ListaDobleInventario& listaInventario,
+	ListaCircularDMarcasProductos& listaMarcasProductos, ListaDobleInventario& listaInventario,
 	HashingClientes& hashClientes, HashingAdmins& hashAdmins, ListaCircularCiudades& listaCiudades)
 {
 	do
     {
-        cout << "************LISTAR:************" << endl;
+        cout << "\n************LISTAR:************" << endl;
 	    cout << "1. Pasillos" << endl;
 	    cout << "2. Productos" << endl;
 	    cout << "3. Marcas" << endl;
@@ -2774,7 +2851,7 @@ void menuListar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             case 3:
             	system("cls");
             	cout << "\nMarcas de Productos:" << endl;
-                listaMarcas.Mostrar();
+                listaMarcasProductos.Mostrar();
                 break;
 
             case 4:
@@ -2813,12 +2890,12 @@ void menuListar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
 }
 
 void menuReportes(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos,
-	ListaCircularDMarcasProductos& listaMarcas, ListaDobleInventario& listaInventario,
+	ListaCircularDMarcasProductos& listaMarcasProductos, ListaDobleInventario& listaInventario,
 	HashingClientes& hashClientes, HashingAdmins& hashAdmins, ListaCircularCiudades& listaCiudades)
 {
 	do
     {
-        cout << "************REPORTES:************" << endl;
+        cout << "\n************REPORTES:************" << endl;
 	    cout << "1. Pasillo" << endl;
 	    cout << "2. Producto" << endl;
 	    cout << "3. Marca" << endl;
@@ -2864,14 +2941,14 @@ int main()
 {
     ListaSimplePas listaPasillos;
     ListaDobleProPasillos listaProductos;
-    ListaCircularDMarcasProductos listaMarcas;
+    ListaCircularDMarcasProductos listaMarcasProductos;
     ListaDobleInventario listaInventario;
     ListaCircularCiudades listaCiudades;
 
     crearListaPasillos(listaPasillos);
     crearListaProductos(listaProductos, listaPasillos);
-    crearListaMarcas(listaMarcas, listaPasillos, listaProductos);
-    crearListaInventario(listaInventario, listaPasillos, listaProductos, listaMarcas);
+    crearListaMarcasProductos(listaMarcasProductos, listaPasillos, listaProductos);
+    crearListaInventario(listaInventario, listaPasillos, listaProductos, listaMarcasProductos);
     crearListaCiudades(listaCiudades);
     
     HashingClientes hashClientes(13);
@@ -2879,22 +2956,23 @@ int main()
     HashingAdmins hashAdmins(13);
     cargarAdminsDesdeArchivo(hashAdmins);
     
-    string nombre;
     int cedula, opcion, opcion2;
     
     bool credencialesValidas = false;
 	
-	cout << "************BIENVENID(@)S************" << endl;
+	system("cls");
+	cout << "\n************BIENVENID(@)S************" << endl;
 	do
 	{
-		cout << "\nIngrese su nombre y contrasena para ingresar." << endl;
-        cout << "Ingrese su nombre: "; cin.ignore(); getline(cin, nombre);
+		cout << "\nIngrese su numero de cedula para ingresar." << endl;
         cout << "Ingrese su cedula: "; cin >> cedula;
         
-        // Valida credenciales de usuario en HashingClientes
-	    if (hashClientes.validarCliente(nombre, cedula))
+        // Valida credenciales de usuario en HashingAdmins
+	    if (hashAdmins.loginAdmin(cedula))
 	    {
-	    	cout << "¡Bienvenido administrador, " << nombre << "!\n" << endl;
+	    	system("cls");
+	    	cout << "\nBienvenid(@), administrador(@) "
+				<< hashAdmins.buscarAdmin(cedula)->getNombre() << endl << endl;
 	        do
 			{
 		        menuAdiministrador();
@@ -2905,38 +2983,44 @@ int main()
 				{
 					case 1: // Insertar
 		        		system("cls");
-		                menuInsertar(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
-							hashClientes, hashAdmins, listaCiudades);
+		                menuInsertar(opcion2, listaPasillos, listaProductos,
+							listaMarcasProductos, listaInventario, hashClientes,
+							hashAdmins, listaCiudades);
 		                break;
 		
 		            case 2: // Eliminar
 		            	system("cls");
-		                menuEliminar(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
-							hashClientes, hashAdmins, listaCiudades);
+		                menuEliminar(opcion2, listaPasillos, listaProductos,
+							listaMarcasProductos, listaInventario, hashClientes,
+							hashAdmins, listaCiudades);
 		                break;
 		
 		            case 3: // Buscar
 		            	system("cls");
-		                menuBuscar(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
-							hashClientes, hashAdmins, listaCiudades);
+		                menuBuscar(opcion2, listaPasillos, listaProductos,
+							listaMarcasProductos, listaInventario, hashClientes,
+							hashAdmins, listaCiudades);
 		            	break;
 		
 		            case 4: // Modificar
 		            	system("cls");
-		                menuModificar(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
-							hashClientes, hashAdmins, listaCiudades);
+		                menuModificar(opcion2, listaPasillos, listaProductos,
+							listaMarcasProductos, listaInventario, hashClientes,
+							hashAdmins, listaCiudades);
 		            	break;
 		
 		            case 5: // Listar
 		            	system("cls");
-		                menuListar(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
-							hashClientes, hashAdmins, listaCiudades);
+		                menuListar(opcion2, listaPasillos, listaProductos,
+							listaMarcasProductos, listaInventario, hashClientes,
+							hashAdmins, listaCiudades);
 		            	break;
 		
 		            case 6: // Reportes
 		            	system("cls");
-		                menuReportes(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
-							hashClientes, hashAdmins, listaCiudades);
+		                menuReportes(opcion2, listaPasillos, listaProductos,
+							listaMarcasProductos, listaInventario, hashClientes,
+							hashAdmins, listaCiudades);
 		            	break;
 		
 		            case 7: // Salir
@@ -2950,9 +3034,11 @@ int main()
 		    
 		    credencialesValidas = true;
 		}
-		else if (hashAdmins.validarAdmin(cedula, nombre))
+		else if (hashClientes.loginCliente(cedula))
 		{
-			cout << "¡Bienvenido estimado cliente, " << nombre << "!" << endl;
+			system("cls");
+			cout << "\nBienvenid(@) estimad(@) cliente, "
+				<< hashClientes.buscarCliente(cedula)->getNombre() << endl << endl;
 	        // Implementar acciones del menú para el Cliente
 	        do
 			{
@@ -2970,7 +3056,7 @@ int main()
 		
 		            case 2: // Algunos reportes
 		            	system("cls");
-		                menuReportes(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
+		                menuReportes(opcion2, listaPasillos, listaProductos, listaMarcasProductos, listaInventario,
 							hashClientes, hashAdmins, listaCiudades);
 		            	break;
 		
