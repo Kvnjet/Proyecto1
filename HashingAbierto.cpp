@@ -393,6 +393,62 @@ void HashingAdmins::mostrarHash()
 
 
 
+// Clase Nodo para almacenar el nombre y la contraseña del usuario
+class NodoUsuario
+{
+public:
+    string nombre;
+    string contrasena;
+    NodoUsuario* siguiente;
+
+    NodoUsuario(string nombre, string contrasena) : nombre(nombre), contrasena(contrasena), siguiente(NULL) {}
+};
+
+// Clase ListaUsuarios para manejar la lista de usuarios
+class ListaUsuarios {
+public:
+    ListaUsuarios() : cabeza(nullptr) {}
+    ~ListaUsuarios();
+
+    void agregarUsuario(string nombre, string contrasena);
+    bool verificarCredenciales(string nombre, string contrasena);
+
+private:
+    NodoUsuario* cabeza;
+};
+
+ListaUsuarios::~ListaUsuarios() {
+    NodoUsuario* actual = cabeza;
+    while (actual != nullptr) {
+        NodoUsuario* siguiente = actual->siguiente;
+        delete actual;
+        actual = siguiente;
+    }
+}
+
+void ListaUsuarios::agregarUsuario(string nombre, string contrasena) {
+    NodoUsuario* nuevoUsuario = new NodoUsuario(nombre, contrasena);
+    if (cabeza == nullptr) {
+        cabeza = nuevoUsuario;
+    } else {
+        nuevoUsuario->siguiente = cabeza;
+        cabeza = nuevoUsuario;
+    }
+}
+
+bool ListaUsuarios::verificarCredenciales(string nombre, string contrasena) {
+    NodoUsuario* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->nombre == nombre && actual->contrasena == contrasena) {
+            return true;
+        }
+        actual = actual->siguiente;
+    }
+    return false;
+}
+
+
+
 // Función auxiliar para convertir de string a entero
 int stringAInt(string str)
 {
