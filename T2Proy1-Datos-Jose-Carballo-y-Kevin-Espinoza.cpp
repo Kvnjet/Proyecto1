@@ -1,3 +1,5 @@
+// Estudiantes: José Carballo Martínez y Kevin Espinoza Barrantes
+
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
@@ -138,17 +140,23 @@ void ListaSimplePas::eliminarPasillo(int codPasillo)
 
 pnodoPasillo ListaSimplePas::buscarPasillo(int codPasillo)
 {
-	pnodoPasillo actual = primero;
-
-	while (actual != NULL)
-	{
-        if (actual->codPasillo == codPasillo)
-            return actual;
-
-        actual = actual->siguiente;
+    if (ListaVacia())
+    {
+        cout << "La lista de pasillos está vacía." << endl;
+        return NULL;
     }
 
-	return NULL;
+    pnodoPasillo aux = primero;
+
+    while (aux != NULL)
+	{
+		if (aux->codPasillo == codPasillo)
+            return aux;
+
+        aux = aux->siguiente;
+    }
+
+    return NULL;
 }
 
 void ListaSimplePas::modificarPasillo(int codPasillo, string nombre)
@@ -357,6 +365,10 @@ public:
         siguiente = _siguiente;
         anterior = NULL;
     }
+    
+    int getCodPasillo() { return codPasillo; }
+	int getCodProducto() { return codProducto; }
+	string getNombre() { return nombre; }
 
 private:
     int codPasillo;
@@ -389,8 +401,8 @@ public:
     void insertarProPasillo(int codPasillo, int codProducto, string nombre, ListaSimplePas& listaPasillos);
     bool productoRepetido(int codProducto);
     void eliminarProPasillo(int codProducto);
-    // Funcion de busqueda
-    void modificarProPasillo(int codPasillo, int codProducto, string nombre, ListaSimplePas& listaPasillos);
+    pnodoProPasillo buscarProPasillo(int codProducto);
+    void modificarProPasillo(int codProducto, string nombre);
 
 private:
     pnodoProPasillo primero;
@@ -404,7 +416,15 @@ void ListaDobleProPasillos::insertarProPasillo(int codPasillo, int codProducto, 
         if (!productoRepetido(codProducto))
             // Inserta al inicio después de las validaciones
             InsertarInicio(codPasillo, codProducto, nombre);
+            
+            cout << "\nProducto insertado exitosamente." << endl;
+	        cout << "Producto insertado:" << endl;
+	        cout << " --> CodPasillo: " << codPasillo << endl;
+	        cout << "     CodProducto: " << codProducto << endl;
+	        cout << "     Nombre: " << nombre << endl;
     }
+    else
+    	cout << "\nNo se pudo insertar el producto." << endl;
 }
 
 bool ListaDobleProPasillos::productoRepetido(int codProducto)
@@ -438,7 +458,7 @@ void ListaDobleProPasillos::eliminarProPasillo(int codProducto)
     {
         if (actual->codProducto == codProducto)
         {
-            // Eliminar todas las marcas de ese producto
+            // Elimina todas las marcas de ese producto
             while (actual->anterior != NULL)
             {
                 actual = actual->anterior;
@@ -461,21 +481,40 @@ void ListaDobleProPasillos::eliminarProPasillo(int codProducto)
     cout << "No se encontro el producto con el codigo dado." << endl;
 }
 
-//void ListaDobleProPasillos::modificarProPasillo(int codPasillo, int codProducto, string nombre, ListaSimplePas& listaPasillos)
-//{
-//	pnodoProPasillo proPasillo = buscarProPasillo(codProducto);
-//
-//    if (proPasillo == NULL)
-//    {
-//        cout << "\nProducto no encontrado." << endl;
-//        return;
-//    }
-//
-//    proPasillo->codPasillo = codPasillo;
-//    proPasillo->codProducto = codProducto;
-//    proPasillo->nombre = nombre;
-//    proPasillo->listaPasillos = listaPasillos;
-//}
+pnodoProPasillo ListaDobleProPasillos::buscarProPasillo(int codProducto)
+{
+    if (ListaVacia())
+	{
+        cout << "La lista de pasillos esta vacia." << endl;
+        return NULL;
+    }
+
+    pnodoProPasillo aux = primero;
+
+    while (aux != NULL)
+	{
+        if (aux->codProducto == codProducto)
+            return aux;
+
+        aux = aux->siguiente;
+    }
+
+    return NULL;
+}
+
+void ListaDobleProPasillos::modificarProPasillo(int codProducto, string nombre)
+{
+	pnodoProPasillo proPasillo = buscarProPasillo(codProducto);
+
+    if (proPasillo == NULL)
+    {
+        cout << "\nProducto no encontrado." << endl;
+        return;
+    }
+
+    proPasillo->codProducto = codProducto;
+    proPasillo->nombre = nombre;
+}
 
 
 ListaDobleProPasillos::~ListaDobleProPasillos()
@@ -709,6 +748,13 @@ public:
         siguiente = NULL;
         anterior = NULL;
     }
+    
+    int getCodPasillo() { return codPasillo; }
+    int getCodProducto() { return codProducto; }
+    int getCodMarca() { return codMarca; }
+	string getNombre() { return nombre; }
+	int getCantGondola() { return cantGondola; }
+	int getPrecio() { return precio; }
 
 private:
     int codPasillo;
@@ -744,8 +790,8 @@ public:
     void insertarMarcaProducto(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos);
     bool marcaProductoRepetida(int codMarca);
     void eliminarMarcasProductos();
-    // Función de búsqueda
-    void modificarMarcaProducto(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos);
+    pnodoMarcaProducto buscarMarcaProducto(int codMarca);
+    void modificarMarcaProducto(int codMarca, string nombre, int cantGondola, int precio);
 
 private:
     pnodoMarcaProducto primero;
@@ -755,18 +801,35 @@ void ListaCircularDMarcasProductos::insertarMarcaProducto(int codPasillo, int co
 {
     // Valida si el pasillo existe en la lista simple de pasillos
     if (!listaPasillos.pasilloRepetido(codPasillo))
-        return;
+    {
+    	cout << "Pasillo no existe" << endl;
+    	return;
+	}
 
     // Valida si el producto existe en la lista doble de productos
     if (!listaProductos.productoRepetido(codProducto))
-        return;
+    {
+    	cout << "Producto no existe" << endl;
+    	return;
+	}
 
     // Valida si el codMarca está repetido en la lista circular doble de marcas
     if (marcaProductoRepetida(codMarca))
-        return;
+	{
+    	cout << "La marca ya existe" << endl;
+    	return;
+	}
     
     // Inserta en la lista circular doble de marcas después de las validaciones
     InsertarFinal(codPasillo, codProducto, codMarca, nombre, cantGondola, precio);
+    cout << "\nMarca insertada exitosamente." << endl;
+    cout << "Marca insertada:" << endl;
+    cout << " --> CodPasillo: " << codPasillo << endl;
+    cout << "     CodProducto: " << codProducto << endl;
+    cout << "     CodMarca: " << codMarca << endl;
+    cout << "     Nombre: " << nombre << endl;
+    cout << "     CantGondola: " << cantGondola << endl;
+    cout << "     Precio: " << precio << endl;
 }
 
 bool ListaCircularDMarcasProductos::marcaProductoRepetida(int codMarca)
@@ -811,25 +874,42 @@ void ListaCircularDMarcasProductos::eliminarMarcasProductos()
     cout << "Todos los nodos han sido eliminados." << endl;
 }
 
-//void ListaCircularDMarcasProductos::modificarMarcaProducto(int codPasillo, int codProducto, int codMarca, string nombre, int cantGondola, int precio, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos)
-//{
-//    pnodoMarcaProducto marcaProducto = buscarMarcaProducto(codMarca);
-//
-//    if (marcaProducto == NULL)
-//    {
-//        cout << "\nMarca no encontrada." << endl;
-//        return;
-//    }
-//
-//    marcaProducto->codPasillo = codPasillo;
-//    marcaProducto->codProducto = codProducto;
-//    marcaProducto->codMarca = codMarca;
-//    marcaProducto->nombre = nombre;
-//    marcaProducto->cantGondola = cantGondola;
-//    marcaProducto->precio = precio;
-//    marcaProducto->listaPasillos = listaPasillos;
-//    marcaProducto->listaProductos = listaProductos;
-//}
+pnodoMarcaProducto ListaCircularDMarcasProductos::buscarMarcaProducto(int codMarca)
+{
+	if (ListaVacia())
+	{
+        cout << "La lista de marcas esta vacia." << endl;
+        return NULL;
+    }
+
+    pnodoMarcaProducto aux = primero;
+
+    do
+	{
+        if (aux->codMarca == codMarca)
+            return aux;
+
+        aux = aux->siguiente;
+    } while (aux != primero);
+
+    return NULL;
+}
+
+void ListaCircularDMarcasProductos::modificarMarcaProducto(int codMarca, string nombre, int cantGondola, int precio)
+{
+    pnodoMarcaProducto marcaProducto = buscarMarcaProducto(codMarca);
+
+    if (marcaProducto == NULL)
+    {
+        cout << "\nMarca no encontrada." << endl;
+        return;
+    }
+
+    marcaProducto->codMarca = codMarca;
+    marcaProducto->nombre = nombre;
+    marcaProducto->cantGondola = cantGondola;
+    marcaProducto->precio = precio;
+}
 
 
 ListaCircularDMarcasProductos::~ListaCircularDMarcasProductos()
@@ -1061,6 +1141,14 @@ public:
         siguiente = NULL;
         anterior = NULL;
     }
+    
+    int getCodPasillo() { return codPasillo; }
+    int getCodProducto() { return codProducto; }
+    int getCodMarca() { return codMarca; }
+    int getCodInventario() { return codInventario; }
+	string getNombre() { return nombre; }
+	int getCantStock() { return cantStock; }
+	bool getCodCanasta() { return codCanasta; }
 
 private:
     int codPasillo;
@@ -1097,8 +1185,8 @@ public:
     void insertarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcasProductos);
     bool inventarioRepetido(int codInventario);
     void eliminarInventario(int codInventario, ListaSimplePas& listaPasillos);
-    // Función de búsqueda
-    void modificarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcasProductos);
+    pnodoInventario buscarInventario(int codInventario);
+    void modificarInventario(int codInventario, string nombre, int cantStock, bool codCanasta);
 
 private:
     pnodoInventario primero;
@@ -1108,22 +1196,44 @@ void ListaDobleInventario::insertarInventario(int codPasillo, int codProducto, i
 {
     // Valida si el codPasillo existe en la lista simple de pasillos
     if (listaPasillos.pasilloRepetido(codPasillo) == false)
-        return;
+    {
+    	cout << "Pasillo no exite" << endl;
+        return;	
+	}
 
     // Valida si el codProducto existe en la lista doble de productos de pasillo
     if (listaProductos.productoRepetido(codProducto) == false)
-        return;
+    {
+    	cout << "Producto no exite" << endl;
+        return;	
+	}
 
     // Valida si el codMarca existe en la lista circular de marcas de productos
     if (!listaMarcasProductos.marcaProductoRepetida(codMarca))
-        return;
+    {
+    	cout << "Marca no exite" << endl;
+        return;	
+	}
 
     // Valida si el codInventario no está repetido en la lista doble de inventario
     if (inventarioRepetido(codInventario))
-        return;
+    {
+    	cout << "Codigo de inventario ya exite" << endl;
+        return;	
+	}
 
     // Inserta en la lista doble de inventario después de las validaciones
     InsertarFinal(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta);
+    
+    cout << "\nInventario insertado exitosamente." << endl;
+    cout << "Inventario insertado:" << endl;
+    cout << " --> CodPasillo: " << codPasillo << endl;
+    cout << "     CodProducto: " << codProducto << endl;
+    cout << "     CodMarca: " << codMarca << endl;
+    cout << "     CodInventario: " << codInventario << endl;
+    cout << "     Nombre: " << nombre << endl;
+    cout << "     CantStock: " << cantStock << endl;
+    cout << "     CodCanasta: " << codCanasta << endl;
 }
 
 bool ListaDobleInventario::inventarioRepetido(int codInventario)
@@ -1181,27 +1291,42 @@ void ListaDobleInventario::eliminarInventario(int codInventario, ListaSimplePas&
     cout << "No se encontro el producto con el codigo de inventario dado." << endl;
 }
 
-//void ListaDobleInventario::modificarInventario(int codPasillo, int codProducto, int codMarca, int codInventario, string nombre, int cantStock, bool codCanasta, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos, ListaCircularDMarcasProductos& listaMarcasProductos)
-//{
-//    pnodoInventario inventario = buscarInventario(codInventario);
-//
-//    if (inventario == NULL)
-//    {
-//        cout << "\nInventario no encontrado." << endl;
-//        return;
-//    }
-//
-//    inventario->codPasillo = codPasillo;
-//    inventario->codProducto = codProducto;
-//    inventario->codMarca = codMarca;
-//    inventario->codInventario = codInventario;
-//    inventario->nombre = nombre;
-//    inventario->cantStock = cantStock;
-//    inventario->codCanasta = codCanasta;
-//    inventario->listaPasillos = listaPasillos;
-//    inventario->listaProductos = listaProductos;
-//    inventario->listaMarcasProductos = listaMarcasProductos;
-//}
+pnodoInventario ListaDobleInventario::buscarInventario(int codInventario)
+{
+	if (ListaVacia())
+	{
+        cout << "La lista de inventario esta vacia." << endl;
+        return NULL;
+    }
+
+    pnodoInventario aux = primero;
+
+    while (aux != NULL)
+	{
+        if (aux->codInventario == codInventario)
+            return aux;
+
+        aux = aux->siguiente;
+    }
+
+    return NULL;
+}
+
+void ListaDobleInventario::modificarInventario(int codInventario, string nombre, int cantStock, bool codCanasta)
+{
+    pnodoInventario inventario = buscarInventario(codInventario);
+
+    if (inventario == NULL)
+    {
+        cout << "\nInventario no encontrado." << endl;
+        return;
+    }
+
+    inventario->codInventario = codInventario;
+    inventario->nombre = nombre;
+    inventario->cantStock = cantStock;
+    inventario->codCanasta = codCanasta;
+}
 
 
 ListaDobleInventario::~ListaDobleInventario()
@@ -1427,6 +1552,9 @@ public:
         siguiente = NULL;
     }
 
+	int getCodCiudad() { return codCiudad; }
+	string getNombre() { return nombre; }
+
 private:
     int codCiudad;
     string nombre;
@@ -1456,7 +1584,7 @@ public:
     void insertarCiudad(int codCiudad, string nombre);
     bool ciudadRepetida(int codCiudad);    
     void eliminarCiudad(int codCiudad);
-    // Función de búsqueda
+    pnodoCiudad buscarCiudad(int codCiudad);
     void modificarCiudad(int codCiudad, string nombre);
 
 private:
@@ -1467,7 +1595,14 @@ void ListaCircularCiudades::insertarCiudad(int codCiudad, string nombre)
 {
     // Valida si el codCiudad no está repetido
     if (ciudadRepetida(codCiudad) == false)
+    {
         InsertarInicio(codCiudad, nombre);
+        
+        cout << "\nCiudad insertada exitosamente." << endl;
+        cout << "Ciudad insertada:" << endl;
+        cout << " --> CodCiudad: " << codCiudad << endl;
+        cout << "     Nombre: " << nombre << endl;
+    }
     else
         cout << "El codigo de ciudad ya existe en la lista." << endl;
 }
@@ -1521,22 +1656,43 @@ void ListaCircularCiudades::eliminarCiudad(int codCiudad)
     cout << "No se encontro la ciudad con el codigo dado." << endl;
 }
 
-//void ListaCircularCiudades::modificarCiudad(int codCiudad, string nombre)
-//{
-//    // Busca la ciudad con el código dado
-//    pnodoCiudad ciudad = buscarCiudad(codCiudad);
-//
-//    // Verifica si la ciudad no existe
-//    if (ciudad == NULL)
-//    {
-//        cout << "\nCiudad no encontrada." << endl;
-//        return;
-//    }
-//
-//    // Modificar los atributos de la ciudad encontrado
-//    ciudad->codCiudad = codCiudad;
-//    ciudad->nombre = nombre;
-//}
+pnodoCiudad ListaCircularCiudades::buscarCiudad(int codCiudad)
+{
+	if (ListaVacia())
+	{
+        cout << "La lista de inventario esta vacia." << endl;
+        return NULL;
+    }
+
+    pnodoCiudad aux = primero;
+
+    while (aux != NULL)
+	{
+        if (aux->codCiudad == codCiudad)
+            return aux;
+
+        aux = aux->siguiente;
+    }
+
+    return NULL;
+}
+
+void ListaCircularCiudades::modificarCiudad(int codCiudad, string nombre)
+{
+    // Busca la ciudad con el código dado
+    pnodoCiudad ciudad = buscarCiudad(codCiudad);
+
+    // Verifica si la ciudad no existe
+    if (ciudad == NULL)
+    {
+        cout << "\nCiudad no encontrada." << endl;
+        return;
+    }
+
+    // Modificar los atributos de la ciudad encontrado
+    ciudad->codCiudad = codCiudad;
+    ciudad->nombre = nombre;
+}
 
 
 ListaCircularCiudades::~ListaCircularCiudades()
@@ -2508,12 +2664,53 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
 				break;
 			}
 
-            case 2: break;
+            case 2:
+            {
+                int codPasillo, codProducto;
+                string nombre;
+                
+                cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
+                cout << "Ingrese el codigo del producto: "; cin >> codProducto;
+                cout << "Ingrese el nombre del producto: "; cin.ignore(); getline(cin, nombre);
+                
+				listaProductos.insertarProPasillo(codPasillo, codProducto, nombre, listaPasillos); 
+				break;
+			}
 
-            case 3: break;
+            case 3:
+            {
+                int codPasillo, codProducto, codMarca, cantGondola, precio;
+                string nombre;
+                
+                cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
+                cout << "Ingrese el codigo del producto: "; cin >> codProducto;
+                cout << "Ingrese el codigo de la marca: "; cin >> codMarca;
+                cout << "Ingrese el nombre del producto: "; cin.ignore(); getline(cin, nombre);
+                cout << "Ingrese el cantidad en gondola: "; cin >> cantGondola;
+                cout << "Ingrese el precio del producto: "; cin >> precio;
+                
+				listaMarcasProductos.insertarMarcaProducto(codPasillo, codProducto, codMarca, nombre, cantGondola, precio, listaPasillos, listaProductos); 
+				break;
+			}
 
-            case 4: break;
-            
+            case 4:
+            {
+                int codPasillo, codProducto, codMarca, codInventario, cantStock;
+                string nombre;
+                bool codCanasta;
+                
+                cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
+                cout << "Ingrese el codigo del producto: "; cin >> codProducto;
+                cout << "Ingrese el codigo de la marca: "; cin >> codMarca;
+                cout << "Ingrese el codigo del inventario: "; cin >> codInventario;
+                cout << "Ingrese el nombre del producto: "; cin.ignore(); getline(cin, nombre);
+                cout << "Ingrese el cantidad de stock: "; cin >> cantStock;
+                cout << "Ingrese el codigo de canasta: "; cin >> codCanasta;
+                
+				listaInventario.insertarInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta, listaPasillos, listaProductos, listaMarcasProductos); 
+				break;
+			}
+
             case 5:
             {
                 int cedula, codCiudad;
@@ -2544,7 +2741,17 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 break;
             }
             
-            case 7: break;
+            case 7:
+            {
+                int codCiudad;
+                string nombre;
+                
+                cout << "Ingrese el codigo de la ciudad: "; cin >> codCiudad;
+                cout << "Ingrese el nombre de la ciudad: "; cin.ignore(); getline(cin, nombre);
+                
+				listaCiudades.insertarCiudad(codCiudad, nombre); 
+				break;
+			}
             
             case 8:
 				system("cls");
@@ -2588,17 +2795,46 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
 				cout << "Ingrese el codigo del pasillo a eliminar: "; cin >> pasilloAEliminar;
                 
 				listaPasillos.eliminarPasillo(pasilloAEliminar);
-
-                cout << "\nPasillos:" << endl;
-                listaPasillos.Mostrar();
                 break;
             }
 
-            case 2: break;
+            case 2:
+            {
+            	int productoAEliminar;
+				
+                cout << "\nProductos:" << endl;
+                listaProductos.Mostrar();
 
-            case 3: break;
+				cout << "Ingrese el codigo del producto a eliminar: "; cin >> productoAEliminar;
+                
+				listaProductos.eliminarProPasillo(productoAEliminar);
+                break;
+			}
 
-            case 4: break;
+            case 3:
+            {
+            	cout << "\nMarcas:" << endl;
+                listaMarcasProductos.Mostrar();
+
+				listaMarcasProductos.eliminarMarcasProductos();
+				
+				cout << "\nMarcas:" << endl;
+                listaMarcasProductos.Mostrar();
+                break;
+			}
+
+            case 4:
+            {
+            	int inventarioAEliminar;
+				
+                cout << "\nInventario:" << endl;
+                listaInventario.Mostrar();
+
+				cout << "Ingrese el codigo del inventario a eliminar: "; cin >> inventarioAEliminar;
+                
+				listaInventario.eliminarInventario(inventarioAEliminar, listaPasillos);
+                break;
+			}
             
             case 5:
             {
@@ -2620,7 +2856,18 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 break;
             }
             
-            case 7: break;
+            case 7:
+            {
+            	int ciudadAEliminar;
+				
+                cout << "\nCiudades:" << endl;
+                listaCiudades.Mostrar();
+
+				cout << "Ingrese el codigo de la ciudad a eliminar: "; cin >> ciudadAEliminar;
+                
+				listaCiudades.eliminarCiudad(ciudadAEliminar);
+                break;
+			}
             
             case 8:
 				system("cls");
@@ -2656,28 +2903,89 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
         {
             case 1:
             {
-            	int pasilloABuscar;
+            	int codPasilloABuscar;
                 
-				cout << "Ingrese el codigo del pasillo a buscar: "; cin >> pasilloABuscar;
+				cout << "Ingrese el codigo del pasillo a buscar: "; cin >> codPasilloABuscar;
                 
-				pnodoPasillo pasilloBuscado = listaPasillos.buscarPasillo(pasilloABuscar);
+				pnodoPasillo pasilloBuscado = listaPasillos.buscarPasillo(codPasilloABuscar);
 				
                 if (pasilloBuscado != NULL)
 				{
                     cout << "\nPasillo encontrado:" << endl;
-                    cout << "codPasillo: " << pasilloBuscado->getCodPasillo() << endl;
+                    cout << "CodPasillo: " << pasilloBuscado->getCodPasillo() << endl;
                     cout << "Nombre: " << pasilloBuscado->getNombre() << endl;
                 }
 				else
-                    cout << "\nPasillo con codigo " << pasilloABuscar << " no encontrado." << endl;
+                    cout << "\nPasillo con codigo " << codPasilloABuscar << " no encontrado." << endl;
                 break;
 			}
 			
-            case 2: break;
+            case 2:
+            {
+            	int codProductoABuscar;
+                
+				cout << "Ingrese el codigo del producto a buscar: "; cin >> codProductoABuscar;
+                
+				pnodoProPasillo productoBuscado = listaProductos.buscarProPasillo(codProductoABuscar);
+				
+                if (productoBuscado != NULL)
+				{
+                    cout << "\nProducto encontrado:" << endl;
+                    cout << "CodPasillo: " << productoBuscado->getCodPasillo() << endl;
+                    cout << "CodProducto: " << productoBuscado->getCodProducto() << endl;
+                    cout << "Nombre: " << productoBuscado->getNombre() << endl;
+                }
+				else
+                    cout << "\nPasillo con codigo " << codProductoABuscar << " no encontrado." << endl;
+                break;
+			}
 
-            case 3: break;
+            case 3:
+            {
+            	int codMarcaABuscar;
+                
+				cout << "Ingrese el codigo de la marca a buscar: "; cin >> codMarcaABuscar;
+                
+				pnodoMarcaProducto marcaBuscada = listaMarcasProductos.buscarMarcaProducto(codMarcaABuscar);
+				
+                if (marcaBuscada != NULL)
+				{
+					cout << "\nMarca encontrada:" << endl;
+                    cout << "Codigo de pasillo: " << marcaBuscada->getCodPasillo() << endl;
+		            cout << "Codigo de producto: " << marcaBuscada->getCodProducto() << endl;
+		            cout << "Codigo de marca: " << marcaBuscada->getCodMarca() << endl;
+		            cout << "Nombre: " << marcaBuscada->getNombre() << endl;
+		            cout << "Cantidad en góndola: " << marcaBuscada->getCantGondola() << endl;
+		            cout << "Precio: " << marcaBuscada->getPrecio() << endl;
+                }
+				else
+                    cout << "\nMarca con codigo " << codMarcaABuscar << " no encontrada." << endl;
+                break;
+			}
 
-            case 4: break;
+            case 4:
+            {
+            	int codInventarioABuscar;
+                
+				cout << "Ingrese el codigo del inventario a buscar: "; cin >> codInventarioABuscar;
+                
+				pnodoInventario inventarioBuscado = listaInventario.buscarInventario(codInventarioABuscar);
+				
+                if (inventarioBuscado != NULL)
+				{
+					cout << "\nMarca encontrada:" << endl;
+                    cout << "Codigo de pasillo: " << inventarioBuscado->getCodPasillo() << endl;
+		            cout << "Codigo de producto: " << inventarioBuscado->getCodProducto() << endl;
+		            cout << "Codigo de marca: " << inventarioBuscado->getCodMarca() << endl;
+		            cout << "Codigo de inventario: " << inventarioBuscado->getCodInventario() << endl;
+		            cout << "Nombre: " << inventarioBuscado->getNombre() << endl;
+		            cout << "Cantidad en stock: " << inventarioBuscado->getCantStock() << endl;
+		            cout << "Codigo de canasta: " << inventarioBuscado->getCodCanasta() << endl;
+                }
+				else
+                    cout << "\nInventario con codigo " << codInventarioABuscar << " no encontrado." << endl;
+                break;
+			}
             
             case 5:
             {
@@ -2723,7 +3031,24 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
                 break;
             }
             
-            case 7: break;
+            case 7:
+            {
+            	int codCiudadABuscar;
+                
+				cout << "Ingrese el codigo de la ciudad a buscar: "; cin >> codCiudadABuscar;
+                
+				pnodoCiudad ciudadBuscada = listaCiudades.buscarCiudad(codCiudadABuscar);
+				
+                if (ciudadBuscada != NULL)
+				{
+                    cout << "\nCiudad encontrada:" << endl;
+                    cout << "Codigo de ciudad: " << ciudadBuscada->getCodCiudad() << endl;
+                    cout << "Nombre: " << ciudadBuscada->getNombre() << endl;
+                }
+				else
+                    cout << "\nCiudad con codigo " << codCiudadABuscar << " no encontrada." << endl;
+                break;
+			}
             
             case 8:
 				system("cls");
@@ -2772,11 +3097,64 @@ void menuModificar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasil
                 break;
             }
 
-            case 2: break;
+            case 2:
+            {
+            	int codProductoAModificar;
+                string nombre;
+                
+                cout << "\nProductos:" << endl;
+                listaProductos.Mostrar();
+                
+                cout << "Ingrese el codigo del producto a modificar: "; cin >> codProductoAModificar;
+                cout << "Ingrese el nuevo nombre del producto: "; cin.ignore(); getline(cin, nombre);
+                
+                listaProductos.modificarProPasillo(codProductoAModificar, nombre);
+                
+                cout << "\nProductos:" << endl;
+                listaProductos.Mostrar();
+                break;
+			}
 
-            case 3: break;
+            case 3:
+            {
+            	int codMarcaAModificar, cantGondola, precio;
+                string nombre;
+                
+                cout << "\nMarcas:" << endl;
+                listaMarcasProductos.Mostrar();
+                
+                cout << "Ingrese el codigo de la marca a modificar: "; cin >> codMarcaAModificar;
+                cout << "Ingrese el nuevo nombre de la marca: "; cin.ignore(); getline(cin, nombre);
+                cout << "Ingrese la nueva cantidad de producto en la gondola: "; cin >> cantGondola;
+                cout << "Ingrese el nuevo precio del producto: "; cin >> precio;
+                
+                listaMarcasProductos.modificarMarcaProducto(codMarcaAModificar, nombre, cantGondola, precio);
+                
+                cout << "\nMarcas:" << endl;
+                listaMarcasProductos.Mostrar();
+                break;
+			}
 
-            case 4: break;
+            case 4:
+            {
+            	int codInventarioAModificar, cantStock;
+                string nombre;
+                bool codCanasta;
+                
+                cout << "\nInventario:" << endl;
+                listaInventario.Mostrar();
+                
+                cout << "Ingrese el codigo del inventario a modificar: "; cin >> codInventarioAModificar;
+                cout << "Ingrese el nuevo nombre de la marca: "; cin.ignore(); getline(cin, nombre);
+                cout << "Ingrese la nueva cantidad de stock: "; cin >> cantStock;
+                cout << "Indique si el producto es de canasta basica: "; cin >> codCanasta;
+                
+                listaInventario.modificarInventario(codInventarioAModificar, nombre, cantStock, codCanasta);
+                
+                cout << "\nInventario:" << endl;
+                listaInventario.Mostrar();
+                break;
+			}
             
             case 5:
             {
@@ -2808,7 +3186,23 @@ void menuModificar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasil
                 break;
             }
             
-            case 7: break;
+            case 7:
+            {
+            	int codCiudadAModificar;
+                string nombre;
+                
+                cout << "\nCiudades:" << endl;
+                listaCiudades.Mostrar();
+                
+                cout << "Ingrese el codigo de la ciudad a modificar: "; cin >> codCiudadAModificar;
+                cout << "Ingrese el nuevo nombre de la ciudad: "; cin.ignore(); getline(cin, nombre);
+                
+                listaCiudades.modificarCiudad(codCiudadAModificar, nombre);
+                
+                cout << "\nCiudades:" << endl;
+                listaCiudades.Mostrar();
+                break;
+			}
             
             case 8:
 				system("cls");
