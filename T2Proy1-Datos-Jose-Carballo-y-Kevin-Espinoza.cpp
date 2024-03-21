@@ -868,7 +868,7 @@ void ListaCircularDMarcasProductos::eliminarMarcasProductos()
         siguiente = actual->siguiente;
         delete actual;
         actual = siguiente;
-    } while (actual != primero);
+    } while (actual->siguiente != NULL);
 
     primero = NULL; // Establece primero como NULL después de eliminar todos los nodos
     cout << "Todos los nodos han sido eliminados." << endl;
@@ -3356,124 +3356,153 @@ int main()
     HashingAdmins hashAdmins(13);
     cargarAdminsDesdeArchivo(hashAdmins);
     
-    int cedula, opcion, opcion2;
+    int cedula, opcion, opcion2, opcion3;
     
+    bool salirPrograma = false;
     bool credencialesValidas = false;
-	
-	system("cls");
-	cout << "\n************BIENVENID(@)S************" << endl;
-	do
-	{
-		cout << "\nIngrese su numero de cedula para ingresar." << endl;
-        cout << "Ingrese su cedula: "; cin >> cedula;
-        
-        // Valida credenciales de usuario en HashingAdmins
-	    if (hashAdmins.loginAdmin(cedula))
-	    {
-	    	system("cls");
-	    	cout << "\nBienvenid(@), administrador(@) "
-				<< hashAdmins.buscarAdmin(cedula)->getNombre() << endl << endl;
-	        do
-			{
-		        menuAdiministrador();
-		        cout << "\nIngrese la opcion deseada: ";
-		        cin >> opcion;
-		
-		        switch (opcion)
-				{
-					case 1: // Insertar
-		        		system("cls");
-		                menuInsertar(opcion2, listaPasillos, listaProductos,
-							listaMarcasProductos, listaInventario, hashClientes,
-							hashAdmins, listaCiudades);
-		                break;
-		
-		            case 2: // Eliminar
-		            	system("cls");
-		                menuEliminar(opcion2, listaPasillos, listaProductos,
-							listaMarcasProductos, listaInventario, hashClientes,
-							hashAdmins, listaCiudades);
-		                break;
-		
-		            case 3: // Buscar
-		            	system("cls");
-		                menuBuscar(opcion2, listaPasillos, listaProductos,
-							listaMarcasProductos, listaInventario, hashClientes,
-							hashAdmins, listaCiudades);
-		            	break;
-		
-		            case 4: // Modificar
-		            	system("cls");
-		                menuModificar(opcion2, listaPasillos, listaProductos,
-							listaMarcasProductos, listaInventario, hashClientes,
-							hashAdmins, listaCiudades);
-		            	break;
-		
-		            case 5: // Listar
-		            	system("cls");
-		                menuListar(opcion2, listaPasillos, listaProductos,
-							listaMarcasProductos, listaInventario, hashClientes,
-							hashAdmins, listaCiudades);
-		            	break;
-		
-		            case 6: // Reportes
-		            	system("cls");
-		                menuReportes(opcion2, listaPasillos, listaProductos,
-							listaMarcasProductos, listaInventario, hashClientes,
-							hashAdmins, listaCiudades);
-		            	break;
-		
-		            case 7: // Salir
-		                cout << "Saliendo del programa..." << endl; break;
-		
-		            default:
-		            	system("cls");
-						cout << "Ingrese una opcion valida.\n" << endl;
-				}
-		    } while (opcion != 7);
-		    
-		    credencialesValidas = true;
-		}
-		else if (hashClientes.loginCliente(cedula))
+    
+    do
+    {
+    	system("cls");
+        cout << "\n************BIENVENID(@)S************" << endl;
+        cout << "1. Loguearse" << endl;
+        cout << "2. Salir del programa" << endl;
+		cout << "\nIngrese la opcion deseada: "; cin >> opcion;
+
+        switch (opcion)
 		{
-			system("cls");
-			cout << "\nBienvenid(@) estimad(@) cliente, "
-				<< hashClientes.buscarCliente(cedula)->getNombre() << endl << endl;
-	        // Implementar acciones del menú para el Cliente
-	        do
-			{
-		        menuCliente();
-		        cout << "\nIngrese la opcion deseada: ";
-		        cin >> opcion;
-		
-		        switch (opcion)
+            case 1: // Loguearse
+            {
+                system("cls");
+                credencialesValidas = false;
+
+				do
 				{
-					case 1: // Buscar
-		        		// system("cls");
-		                // menuBuscar(opcion2, listaPasillos, listaProductos, listaMarcas, listaInventario,
-						// 	hashClientes, hashAdmins, listaCiudades);
-		                break;
-		
-		            case 2: // Algunos reportes
-		            	system("cls");
-		                menuReportes(opcion2, listaPasillos, listaProductos, listaMarcasProductos, listaInventario,
-							hashClientes, hashAdmins, listaCiudades);
-		            	break;
-		
-		            case 3: // Salir
-		                cout << "Saliendo del programa..." << endl; break;
-		
-		            default:
-		            	system("cls");
-						cout << "Ingrese una opcion valida.\n" << endl;
-				}
-		    } while (opcion != 3);
-		    
-		    credencialesValidas = true;
-		}
-		else
-			cout << "\nNombre de usuario o cedula incorrectos. Intente nuevamente." << endl;
-    } while (!credencialesValidas);
+					cout << "\nIngrese su numero de cedula para ingresar." << endl;
+			        cout << "Ingrese su cedula: "; cin >> cedula;
+			        
+			        // Valida credenciales de usuario en HashingAdmins
+				    if (hashAdmins.loginAdmin(cedula))
+				    {
+				    	system("cls");
+				    	cout << "\nBienvenid(@), administrador(@) "
+							<< hashAdmins.buscarAdmin(cedula)->getNombre() << endl << endl;
+					    credencialesValidas = true;
+
+				        do
+						{
+					        menuAdiministrador();
+					        cout << "\nIngrese la opcion deseada: "; cin >> opcion2;
+					
+					        switch (opcion2)
+							{
+								case 1: // Insertar
+					        		system("cls");
+					                menuInsertar(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					                break;
+					
+					            case 2: // Eliminar
+					            	system("cls");
+					                menuEliminar(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					                break;
+					
+					            case 3: // Buscar
+					            	system("cls");
+					                menuBuscar(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					            	break;
+					
+					            case 4: // Modificar
+					            	system("cls");
+					                menuModificar(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					            	break;
+					
+					            case 5: // Listar
+					            	system("cls");
+					                menuListar(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					            	break;
+					
+					            case 6: // Reportes
+					            	system("cls");
+					                menuReportes(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					            	break;
+					
+					            case 7: // Salir
+					                cout << "Saliendo del sistema..." << endl;
+									break;
+					
+					            default:
+					            	system("cls");
+									cout << "Ingrese una opcion valida.\n" << endl;
+							}
+					    } while (opcion2 != 7);
+					}
+					else if (hashClientes.loginCliente(cedula))
+					{
+						system("cls");
+						cout << "\nBienvenid(@) estimad(@) cliente, "
+							<< hashClientes.buscarCliente(cedula)->getNombre() << endl << endl;
+					    credencialesValidas = true;
+
+				        do
+						{
+					        menuCliente();
+					        cout << "\nIngrese la opcion deseada: "; cin >> opcion2;
+					
+					        switch (opcion2)
+							{
+								case 1: // Buscar
+									system("cls");
+					        		menuBuscar(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					            	break;
+					
+					            case 2: // Algunos reportes
+					            	system("cls");
+					                menuReportes(opcion3, listaPasillos, listaProductos,
+										listaMarcasProductos, listaInventario, hashClientes,
+										hashAdmins, listaCiudades);
+					            	break;
+					
+					            case 3: // Salir
+					                cout << "Saliendo del sistema..." << endl;
+									break;
+					
+					            default:
+					            	system("cls");
+									cout << "Ingrese una opcion valida.\n" << endl;
+							}
+					    } while (opcion2 != 3);
+					    
+					    credencialesValidas = true;
+					}
+					else
+						cout << "\nNombre de usuario o cedula incorrectos. Intente nuevamente." << endl;
+			    } while (!credencialesValidas); break;
+			}
+			
+            case 2: // Salir del programa
+                cout << "Saliendo del programa..." << endl;
+                salirPrograma = true;
+                break;
+
+            default:
+                cout << "Ingrese una opción válida." << endl;
+                break;
+        }
+	} while (!salirPrograma);
 
     return 0;
 }
