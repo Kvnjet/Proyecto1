@@ -1,4 +1,3 @@
-codpasillo;codproducto;nombre
 01;20;Arroz
 20;45;Cloro
 01;34;Frijoles
