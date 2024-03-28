@@ -2709,8 +2709,11 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 int codPasillo;
                 string nombre;
                 
-                cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
-                cout << "Ingrese el nombre del pasillo: "; cin.ignore(); getline(cin, nombre);
+                cout << "Ingrese el codigo del pasillo: ";
+				cin >> codPasillo;
+                cout << "Ingrese el nombre del pasillo: ";
+				cin.ignore();
+				getline(cin, nombre);
                 
 				listaPasillos.insertarPasillo(codPasillo, nombre); 
 				break;
@@ -2721,9 +2724,13 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 int codPasillo, codProducto;
                 string nombre;
                 
-                cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
-                cout << "Ingrese el codigo del producto: "; cin >> codProducto;
-                cout << "Ingrese el nombre del producto: "; cin.ignore(); getline(cin, nombre);
+                cout << "Ingrese el codigo del pasillo: ";
+				cin >> codPasillo;
+                cout << "Ingrese el codigo del producto: ";
+				cin >> codProducto;
+                cout << "Ingrese el nombre del producto: ";
+				cin.ignore();
+				getline(cin, nombre);
                 
 				listaProductos.insertarProPasillo(codPasillo, codProducto, nombre, listaPasillos); 
 				break;
@@ -2734,12 +2741,19 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 int codPasillo, codProducto, codMarca, cantGondola, precio;
                 string nombre;
                 
-                cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
-                cout << "Ingrese el codigo del producto: "; cin >> codProducto;
-                cout << "Ingrese el codigo de la marca: "; cin >> codMarca;
-                cout << "Ingrese el nombre del producto: "; cin.ignore(); getline(cin, nombre);
-                cout << "Ingrese el cantidad en gondola: "; cin >> cantGondola;
-                cout << "Ingrese el precio del producto: "; cin >> precio;
+                cout << "Ingrese el codigo del pasillo: ";
+				cin >> codPasillo;
+                cout << "Ingrese el codigo del producto: ";
+				cin >> codProducto;
+                cout << "Ingrese el codigo de la marca: ";
+				cin >> codMarca;
+                cout << "Ingrese el nombre del producto: ";
+				cin.ignore();
+				getline(cin, nombre);
+                cout << "Ingrese el cantidad en gondola: ";
+				cin >> cantGondola;
+                cout << "Ingrese el precio del producto: ";
+				cin >> precio;
                 
 				listaMarcasProductos.insertarMarcaProducto(codPasillo, codProducto, codMarca, nombre, cantGondola, precio, listaPasillos, listaProductos); 
 				break;
@@ -2751,13 +2765,21 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 string nombre;
                 bool codCanasta;
                 
-                cout << "Ingrese el codigo del pasillo: "; cin >> codPasillo;
-                cout << "Ingrese el codigo del producto: "; cin >> codProducto;
-                cout << "Ingrese el codigo de la marca: "; cin >> codMarca;
-                cout << "Ingrese el codigo del inventario: "; cin >> codInventario;
-                cout << "Ingrese el nombre del producto: "; cin.ignore(); getline(cin, nombre);
-                cout << "Ingrese el cantidad de stock: "; cin >> cantStock;
-                cout << "Ingrese el codigo de canasta: "; cin >> codCanasta;
+                cout << "Ingrese el codigo del pasillo: ";
+				cin >> codPasillo;
+                cout << "Ingrese el codigo del producto: ";
+				cin >> codProducto;
+                cout << "Ingrese el codigo de la marca: ";
+				cin >> codMarca;
+                cout << "Ingrese el codigo del inventario: ";
+				cin >> codInventario;
+                cout << "Ingrese el nombre del producto: ";
+				cin.ignore();
+				getline(cin, nombre);
+                cout << "Ingrese el cantidad de stock: ";
+				cin >> cantStock;
+                cout << "Ingrese el codigo de canasta: ";
+				cin >> codCanasta;
                 
 				listaInventario.insertarInventario(codPasillo, codProducto, codMarca, codInventario, nombre, cantStock, codCanasta, listaPasillos, listaProductos, listaMarcasProductos); 
 				break;
@@ -2768,11 +2790,17 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 int cedula, codCiudad;
                 string nombre, telefono, correo;
                 
-                cout << "Ingrese la cedula del cliente: "; cin >> cedula;
-                cout << "Ingrese el nombre del cliente: "; cin.ignore(); getline(cin, nombre);
-                cout << "Ingrese el codigo de la ciudad: "; cin >> codCiudad;
-                cout << "Ingrese el telefono del cliente: "; cin >> telefono;
-                cout << "Ingrese el correo del cliente: "; cin >> correo;
+                cout << "Ingrese la cedula del cliente: ";
+				cin >> cedula;
+                cout << "Ingrese el nombre del cliente: ";
+				cin.ignore();
+				getline(cin, nombre);
+                cout << "Ingrese el codigo de la ciudad: ";
+				cin >> codCiudad;
+                cout << "Ingrese el telefono del cliente: ";
+				cin >> telefono;
+                cout << "Ingrese el correo del cliente: ";
+				cin >> correo;
                 
 				hashClientes.insertarCliente(cedula, nombre, codCiudad, telefono, correo);
                 break;
@@ -2783,11 +2811,17 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 int cedula, codCiudad;
                 string nombre, telefono, correo;
                 
-                cout << "Ingrese la cedula del administrador: "; cin >> cedula;
-                cout << "Ingrese el nombre del administrador: "; cin.ignore(); getline(cin, nombre);
-                cout << "Ingrese el codigo de la ciudad: "; cin >> codCiudad;
-                cout << "Ingrese el telefono del administrador: "; cin >> telefono;
-                cout << "Ingrese el correo del administrador: "; cin >> correo;
+                cout << "Ingrese la cedula del administrador: ";
+				cin >> cedula;
+                cout << "Ingrese el nombre del administrador: ";
+				cin.ignore();
+				getline(cin, nombre);
+                cout << "Ingrese el codigo de la ciudad: ";
+				cin >> codCiudad;
+                cout << "Ingrese el telefono del administrador: ";
+				cin >> telefono;
+                cout << "Ingrese el correo del administrador: ";
+				cin >> correo;
                 
 				hashAdmins.insertarAdmin(cedula, nombre, codCiudad, telefono, correo);
                 break;
@@ -2798,8 +2832,11 @@ void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
                 int codCiudad;
                 string nombre;
                 
-                cout << "Ingrese el codigo de la ciudad: "; cin >> codCiudad;
-                cout << "Ingrese el nombre de la ciudad: "; cin.ignore(); getline(cin, nombre);
+                cout << "Ingrese el codigo de la ciudad: ";
+				cin >> codCiudad;
+                cout << "Ingrese el nombre de la ciudad: ";
+				cin.ignore();
+				getline(cin, nombre);
                 
 				listaCiudades.insertarCiudad(codCiudad, nombre); 
 				break;
@@ -2841,7 +2878,8 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
             {
             	int pasilloAEliminar;
 				
-				cout << "Ingrese el codigo del pasillo a eliminar: "; cin >> pasilloAEliminar;
+				cout << "Ingrese el codigo del pasillo a eliminar: ";
+				cin >> pasilloAEliminar;
 				
 				pnodoPasillo pasilloEncontrado = listaPasillos.buscarPasillo(pasilloAEliminar);
 				
@@ -2857,7 +2895,8 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
             {
             	int productoAEliminar;
 				
-                cout << "Ingrese el codigo del producto a eliminar: "; cin >> productoAEliminar;
+                cout << "Ingrese el codigo del producto a eliminar: ";
+				cin >> productoAEliminar;
                 
                 pnodoProPasillo productoEncontrado = listaProductos.buscarProPasillo(productoAEliminar);
                 
@@ -2879,7 +2918,8 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
             {
             	int inventarioAEliminar;
 
-				cout << "Ingrese el codigo del inventario a eliminar: "; cin >> inventarioAEliminar;
+				cout << "Ingrese el codigo del inventario a eliminar: ";
+				cin >> inventarioAEliminar;
 				
 				pnodoInventario inventarioEncontrado = listaInventario.buscarInventario(inventarioAEliminar);
                 
@@ -2895,7 +2935,8 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
             {
                 int cedulaAEliminar;
                 
-				cout << "Ingrese la cedula del cliente a eliminar: "; cin >> cedulaAEliminar;
+				cout << "Ingrese la cedula del cliente a eliminar: ";
+				cin >> cedulaAEliminar;
                 
 				hashClientes.eliminarCliente(cedulaAEliminar);
                 break;
@@ -2905,7 +2946,8 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
         	{
                 int cedulaAEliminar;
                 
-				cout << "Ingrese la cedula del administrador a eliminar: "; cin >> cedulaAEliminar;
+				cout << "Ingrese la cedula del administrador a eliminar: ";
+				cin >> cedulaAEliminar;
                 
 				hashAdmins.eliminarAdmin(cedulaAEliminar);
                 break;
@@ -2915,7 +2957,8 @@ void menuEliminar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasill
             {
             	int ciudadAEliminar;
 
-				cout << "Ingrese el codigo de la ciudad a eliminar: "; cin >> ciudadAEliminar;
+				cout << "Ingrese el codigo de la ciudad a eliminar: ";
+				cin >> ciudadAEliminar;
                 
                 pnodoCiudad ciudadEncontrada = listaCiudades.buscarCiudad(ciudadAEliminar);
 
@@ -2963,7 +3006,8 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             {
             	int codPasilloABuscar;
                 
-				cout << "Ingrese el codigo del pasillo a buscar: "; cin >> codPasilloABuscar;
+				cout << "Ingrese el codigo del pasillo a buscar: ";
+				cin >> codPasilloABuscar;
                 
 				pnodoPasillo pasilloBuscado = listaPasillos.buscarPasillo(codPasilloABuscar);
 				
@@ -2982,7 +3026,8 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             {
             	int codProductoABuscar;
                 
-				cout << "Ingrese el codigo del producto a buscar: "; cin >> codProductoABuscar;
+				cout << "Ingrese el codigo del producto a buscar: ";
+				cin >> codProductoABuscar;
                 
 				pnodoProPasillo productoBuscado = listaProductos.buscarProPasillo(codProductoABuscar);
 				
@@ -3002,7 +3047,8 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             {
             	int codMarcaABuscar;
                 
-				cout << "Ingrese el codigo de la marca a buscar: "; cin >> codMarcaABuscar;
+				cout << "Ingrese el codigo de la marca a buscar: ";
+				cin >> codMarcaABuscar;
                 
 				pnodoMarcaProducto marcaBuscada = listaMarcasProductos.buscarMarcaProducto(codMarcaABuscar);
 				
@@ -3025,7 +3071,8 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             {
             	int codInventarioABuscar;
                 
-				cout << "Ingrese el codigo del inventario a buscar: "; cin >> codInventarioABuscar;
+				cout << "Ingrese el codigo del inventario a buscar: ";
+				cin >> codInventarioABuscar;
                 
 				pnodoInventario inventarioBuscado = listaInventario.buscarInventario(codInventarioABuscar);
 				
@@ -3049,7 +3096,8 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             {
 	            int cedulaABuscar;
 	            
-				cout << "Ingrese la cedula del cliente a buscar: "; cin >> cedulaABuscar;
+				cout << "Ingrese la cedula del cliente a buscar: ";
+				cin >> cedulaABuscar;
 	            
 				pnodoCte clienteBuscado = hashClientes.buscarCliente(cedulaABuscar);
 				
@@ -3071,7 +3119,8 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             {
                 int cedulaABuscar;
                 
-				cout << "Ingrese la cedula del administrador a buscar: "; cin >> cedulaABuscar;
+				cout << "Ingrese la cedula del administrador a buscar: ";
+				cin >> cedulaABuscar;
                 
 				pnodoAdmin adminBuscado = hashAdmins.buscarAdmin(cedulaABuscar);
 				
@@ -3093,7 +3142,8 @@ void menuBuscar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos
             {
             	int codCiudadABuscar;
                 
-				cout << "Ingrese el codigo de la ciudad a buscar: "; cin >> codCiudadABuscar;
+				cout << "Ingrese el codigo de la ciudad a buscar: ";
+				cin >> codCiudadABuscar;
                 
 				pnodoCiudad ciudadBuscada = listaCiudades.buscarCiudad(codCiudadABuscar);
 				
@@ -3161,11 +3211,17 @@ void menuModificar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasil
                 int cedulaAModificar, codCiudad;
                 string nombre, telefono, correo;
                 
-                cout << "Ingrese la cedula del cliente a modificar: "; cin >> cedulaAModificar;
-                cout << "Ingrese el nuevo nombre del cliente: "; cin.ignore(); getline(cin, nombre);
-                cout << "Ingrese el nuevo codigo de la ciudad del cliente: "; cin >> codCiudad;
-                cout << "Ingrese el nuevo telefono del cliente: "; cin >> telefono;
-                cout << "Ingrese el nuevo correo del cliente: "; cin >> correo;
+                cout << "Ingrese la cedula del cliente a modificar: ";
+				cin >> cedulaAModificar;
+                cout << "Ingrese el nuevo nombre del cliente: ";
+				cin.ignore();
+				getline(cin, nombre);
+                cout << "Ingrese el nuevo codigo de la ciudad del cliente: ";
+				cin >> codCiudad;
+                cout << "Ingrese el nuevo telefono del cliente: ";
+				cin >> telefono;
+                cout << "Ingrese el nuevo correo del cliente: ";
+				cin >> correo;
                 
                 hashClientes.modificarCliente(cedulaAModificar, nombre, codCiudad, telefono, correo);
                 break;
@@ -3176,11 +3232,17 @@ void menuModificar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasil
                 int cedulaAModificar, codCiudad;
                 string nombre, telefono, correo;
                 
-                cout << "Ingrese la cedula del administrador a modificar: "; cin >> cedulaAModificar;
-                cout << "Ingrese el nuevo nombre del administrador: "; cin.ignore(); getline(cin, nombre);
-                cout << "Ingrese el nuevo codigo de la ciudad del administrador: "; cin >> codCiudad;
-                cout << "Ingrese el nuevo telefono del administrador: "; cin >> telefono;
-                cout << "Ingrese el nuevo correo del administrador: "; cin >> correo;
+                cout << "Ingrese la cedula del administrador a modificar: ";
+				cin >> cedulaAModificar;
+                cout << "Ingrese el nuevo nombre del administrador: ";
+				cin.ignore();
+				getline(cin, nombre);
+                cout << "Ingrese el nuevo codigo de la ciudad del administrador: ";
+				cin >> codCiudad;
+                cout << "Ingrese el nuevo telefono del administrador: ";
+				cin >> telefono;
+                cout << "Ingrese el nuevo correo del administrador: ";
+				cin >> correo;
                 
                 hashAdmins.modificarAdmin(cedulaAModificar, nombre, codCiudad, telefono, correo);
                 break;
@@ -3353,7 +3415,8 @@ int main()
         cout << "\n************BIENVENID(@)S************" << endl;
         cout << "1. Iniciar sesion" << endl;
         cout << "2. Salir del programa" << endl;
-		cout << "\nIngrese la opcion deseada: "; cin >> opcion;
+		cout << "\nIngrese la opcion deseada: ";
+		cin >> opcion;
 
         switch (opcion)
 		{
@@ -3365,7 +3428,8 @@ int main()
 				do
 				{
 					cout << "\nIngrese su numero de cedula para ingresar." << endl;
-			        cout << "Ingrese su cedula: "; cin >> cedula;
+			        cout << "Ingrese su cedula: ";
+					cin >> cedula;
 			        
 			        // Valida credenciales de usuario en HashingAdmins
 				    if (hashAdmins.loginAdmin(cedula))
@@ -3378,7 +3442,8 @@ int main()
 				        do
 						{
 					        menuAdiministrador();
-					        cout << "\nIngrese la opcion deseada: "; cin >> opcion2;
+					        cout << "\nIngrese la opcion deseada: ";
+							cin >> opcion2;
 					
 					        switch (opcion2)
 							{
@@ -3444,7 +3509,8 @@ int main()
 				        do
 						{
 					        menuCliente();
-					        cout << "\nIngrese la opcion deseada: "; cin >> opcion2;
+					        cout << "\nIngrese la opcion deseada: ";
+							cin >> opcion2;
 					
 					        switch (opcion2)
 							{
