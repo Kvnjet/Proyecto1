@@ -1,0 +1,8 @@
+Reporte: Pasillo mas visitado
+
+Pasillo(s) mas visitado(s):
+CodPasillo: 1
+Nombre: Abarrotes
+Cantidad de visitas: 2
+
+

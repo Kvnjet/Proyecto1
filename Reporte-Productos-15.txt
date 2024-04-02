@@ -1,0 +1,7 @@
+Reporte: Productos
+
+CodPasillo: 15
+CodProducto: 28
+Nombre: Jugos
+
+

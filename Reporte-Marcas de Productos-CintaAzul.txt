@@ -1,0 +1,10 @@
+Reporte: Marcas de Productos
+
+CodPasillo: 1
+CodProducto: 34
+CodMarca: 36
+Nombre: Rojitos
+CantGondola: 5
+Precio: 1500
+
+

@@ -1,0 +1,15 @@
+Reporte: Administradores
+
+Cedula: 4567
+Nombre: Juan Polanco
+CodCiudad: 23451
+Telefono: 23658974
+Correo: juanpq@gmail.com
+
+Cedula: 5678
+Nombre: Ana Cambronero
+CodCiudad: 23451
+Telefono: 1134667
+Correo: ancamp5@gmail.com
+
+

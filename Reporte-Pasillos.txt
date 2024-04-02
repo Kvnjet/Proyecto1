@@ -1,0 +1,15 @@
+Reporte: Pasillos
+
+CodPasillo: 1
+Nombre: Abarrotes
+
+CodPasillo: 20
+Nombre: Limpieza
+
+CodPasillo: 15
+Nombre: Bebidas
+
+CodPasillo: 4
+Nombre: Carnes
+
+
