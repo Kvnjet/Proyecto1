@@ -50,6 +50,7 @@ public:
         codPasillo = _codPasillo;
         codProducto = _codProducto;
         nombre = _nombre;
+        contBusquedas = 0;
         siguiente = NULL;
         anterior = NULL;
     }
@@ -60,6 +61,7 @@ public:
         codPasillo = _codPasillo;
         codProducto = _codProducto;
         nombre = _nombre;
+        contBusquedas = 0;
         siguiente = _siguiente;
         anterior = NULL;
     }
@@ -72,6 +74,7 @@ private:
     int codPasillo;
     int codProducto;
     string nombre;
+    int contBusquedas;
     NodoProPasillo* siguiente;
     NodoProPasillo* anterior;
 
@@ -93,6 +96,7 @@ public:
         nombre = _nombre;
         cantGondola = _cantGondola;
         precio = _precio;
+        contBusquedas = 0;
         siguiente = NULL;
         anterior = NULL;
     }
@@ -111,6 +115,7 @@ private:
     string nombre;
     int cantGondola;
     int precio;
+    int contBusquedas;
     NodoMarcaProducto* siguiente;
     NodoMarcaProducto* anterior;
 
@@ -594,6 +599,7 @@ public:
     pnodoProPasillo buscarProPasillo(int codProducto);
     void modificarProPasillo(int codProducto, string nombre);
     void reporteProPasillos();
+    void reporteProductoMasBuscado();
 
 private:
     pnodoProPasillo primero;
@@ -699,6 +705,7 @@ pnodoProPasillo ListaDobleProPasillos::buscarProPasillo(int codProducto)
     while (aux != NULL)
 	{
         if (aux->codProducto == codProducto)
+        	aux->contBusquedas++;
             return aux;
 
         aux = aux->siguiente;
@@ -968,6 +975,7 @@ public:
     pnodoMarcaProducto buscarMarcaProducto(int codMarca);
     void modificarMarcaProducto(int codMarca, string nombre, int cantGondola, int precio);
     void reporteMarcasProductos();
+    void reporteMarcasMasBuscadas();
 
 private:
     pnodoMarcaProducto primero;
@@ -1068,6 +1076,7 @@ pnodoMarcaProducto ListaCircularDMarcasProductos::buscarMarcaProducto(int codMar
     do
 	{
         if (aux->codMarca == codMarca)
+        	aux->contBusquedas++;
             return aux;
 
         aux = aux->siguiente;
@@ -2283,7 +2292,7 @@ void ListaCircularCiudades::InsertarFinal(int codCiudad, string nombre)
 
 void ListaCircularCiudades::InsertarPos(int codCiudad, string nombre, int pos)
 {
-    if (ListaVacia() || pos <= 1)
+    if (ListaVacia() || (pos <= 1))
         InsertarInicio(codCiudad, nombre);
     else
     {
@@ -3058,6 +3067,14 @@ void ListaSimplePas::reportePasilloMenosVisitado()
 
 
 
+void menuCliente()
+{
+    cout << "************MENU************" << endl;
+    cout << "1. Buscar" << endl;
+    cout << "2. Algunos reportes" << endl;
+    cout << "3. Salir" << endl;
+}
+
 void menuAdiministrador()
 {
 	cout << "************MENU************" << endl;
@@ -3069,15 +3086,6 @@ void menuAdiministrador()
     cout << "6. Reportes" << endl;
     cout << "7. Salir" << endl;
 }
-
-void menuCliente()
-{
-    cout << "************MENU************" << endl;
-    cout << "1. Buscar" << endl;
-    cout << "2. Algunos reportes" << endl;
-    cout << "3. Salir" << endl;
-}
-
 
 
 void menuInsertar(int opcion, ListaSimplePas& listaPasillos, ListaDobleProPasillos& listaProductos,
@@ -4075,13 +4083,13 @@ int main()
 
                     if (hashClientes.loginCliente(cedula))
                     {
-                        system("cls");
 						cout << "Bienvenid(@) estimad(@) cliente, "
 							<< hashClientes.buscarCliente(cedula)->getNombre() << endl << endl;
 					    credencialesValidas = true;
 
 				        do
 						{
+				    		system("cls");
 					        menuCliente();
 					        cout << "\nIngrese la opcion deseada: ";
 							cin >> opcion2;
@@ -4100,8 +4108,7 @@ int main()
 										listaMarcasProductos);
 					            	break;
 					
-					            case 3: // Salir
-					                cout << "Saliendo del sistema..." << endl;
+					            case 3: // Volver
 									break;
 
 					            default:
@@ -4114,13 +4121,13 @@ int main()
                     }
                     else if (hashAdmins.loginAdmin(cedula))
 				    {
-				    	system("cls");
 				    	cout << "Bienvenid(@), administrador(@) "
 							<< hashAdmins.buscarAdmin(cedula)->getNombre() << endl << endl;
 					    credencialesValidas = true;
 
 				        do
 						{
+				    		system("cls");
 					        menuAdiministrador();
 					        cout << "\nIngrese la opcion deseada: ";
 							cin >> opcion2;
@@ -4169,8 +4176,7 @@ int main()
 										hashAdmins, listaCiudades);
 					            	break;
 					
-					            case 7: // Salir
-					                cout << "Saliendo del sistema..." << endl;
+					            case 7: // Volver
 									break;
 					
 					            default:
