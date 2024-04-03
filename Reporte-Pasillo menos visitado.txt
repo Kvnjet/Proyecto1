@@ -1,8 +1,0 @@
-Reporte: Pasillo menos visitado
-
-Pasillo(s) menos visitado(s):
-CodPasillo: 15
-Nombre: Bebidas
-Cantidad de visitas: 1
-
-

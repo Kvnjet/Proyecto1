@@ -599,7 +599,7 @@ public:
     pnodoProPasillo buscarProPasillo(int codProducto);
     void modificarProPasillo(int codProducto, string nombre);
     void reporteProPasillos();
-    void reporteProductoMasBuscado();
+    void reporteProductoMasBuscado(ListaSimplePas& listaPasillos);
 
 private:
     pnodoProPasillo primero;
@@ -612,6 +612,7 @@ void ListaDobleProPasillos::insertarProPasillo(int codPasillo, int codProducto,
     if (!productoRepetido(codProducto))
     {
         if (listaPasillos.pasilloRepetido(codPasillo))
+        {
             // Inserta al inicio después de las validaciones
             InsertarFinal(codPasillo, codProducto, nombre);
             
@@ -620,6 +621,9 @@ void ListaDobleProPasillos::insertarProPasillo(int codPasillo, int codProducto,
 	        cout << "--> CodPasillo: " << codPasillo << endl;
 	        cout << "    CodProducto: " << codProducto << endl;
 	        cout << "    Nombre: " << nombre << endl << endl;
+		}
+		else
+			cout << "\nEl pasillo no existe en la lista.\n" << endl;
     }
     else
     	cout << "\nEl producto ya existe en el pasillo.\n" << endl;
@@ -705,8 +709,10 @@ pnodoProPasillo ListaDobleProPasillos::buscarProPasillo(int codProducto)
     while (aux != NULL)
 	{
         if (aux->codProducto == codProducto)
+        {
         	aux->contBusquedas++;
             return aux;
+    	}
 
         aux = aux->siguiente;
     }
@@ -975,7 +981,8 @@ public:
     pnodoMarcaProducto buscarMarcaProducto(int codMarca);
     void modificarMarcaProducto(int codMarca, string nombre, int cantGondola, int precio);
     void reporteMarcasProductos();
-    void reporteMarcasMasBuscadas();
+    void reporteMarcasMasBuscadas(ListaSimplePas& listaPasillos,
+		ListaDobleProPasillos& listaProductos);
 
 private:
     pnodoMarcaProducto primero;
@@ -1076,8 +1083,10 @@ pnodoMarcaProducto ListaCircularDMarcasProductos::buscarMarcaProducto(int codMar
     do
 	{
         if (aux->codMarca == codMarca)
+        {
         	aux->contBusquedas++;
             return aux;
+        }
 
         aux = aux->siguiente;
     } while (aux != primero);
@@ -2748,7 +2757,7 @@ void crearReporte(string nombreReporte, string distintivo, string texto)
 	archivoNuevo << nombreReporte << endl << endl;
 	archivoNuevo << texto << endl;
 	
-	cout << "Reporte " << nombreReporte << " creado con exito.\n" << endl;
+	cout << "\nReporte " << nombreReporte << " creado con exito.\n" << endl;
 	
 	archivoNuevo.close();
 }
@@ -2760,19 +2769,17 @@ void ListaSimplePas::reportePasillos()
 
     // Itera sobre la lista de pasillos y guarda en el archivo
     pnodoPasillo temp = primero;
-    bool listaVacia = true;
 
 	while (temp != NULL)
 	{
-		listaVacia = false;
-
         texto += "CodPasillo: " + intAString(temp->codPasillo) +
-				"\nNombre: " + temp->nombre + "\n\n";
+				"\nNombre: " + temp->nombre +
+				"\n--------------------------\n";
 
         temp = temp->siguiente;
     }
 
-    if (!listaVacia)
+    if (!ListaVacia())
     {
 	    cout << "Reporte: " << nombreReporte << endl << endl;
 	    cout << texto; // Imprime en consola
@@ -2792,22 +2799,24 @@ void ListaDobleProPasillos::reporteProPasillos()
     string texto = "";
 
     pnodoProPasillo temp = primero;
-    bool encontrado = false;
+    bool productoEncontrado = false;
 
     while (temp != NULL)
     {
         if (temp->codPasillo == codigoPasillo)
         {
-            encontrado = true;
+            productoEncontrado = true;
+
             texto += "CodPasillo: " + intAString(temp->codPasillo) +
-                     "\nCodProducto: " + intAString(temp->codProducto) +
-                     "\nNombre: " + temp->nombre + "\n\n";
+                    "\nCodProducto: " + intAString(temp->codProducto) +
+                    "\nNombre: " + temp->nombre +
+					"\n--------------------------\n";
         }
 
         temp = temp->siguiente;
     }
 
-    if (encontrado)
+    if (productoEncontrado)
     {
         cout << "\nReporte: " << nombreReporte << endl << endl;
         cout << texto; // Muestra en consola
@@ -2829,7 +2838,7 @@ void ListaCircularDMarcasProductos::reporteMarcasProductos()
     string texto = "";
 
     pnodoMarcaProducto temp = primero;
-    bool encontrado = false;
+    bool marcaEncontrada = false;
 
     // Avanza hasta el último nodo de la lista circular
     while (temp->siguiente != primero)
@@ -2840,19 +2849,21 @@ void ListaCircularDMarcasProductos::reporteMarcasProductos()
 	{
         if ((temp->codPasillo == codigoPasillo) && (temp->codProducto == codigoProducto))
 		{
-            encontrado = true;
+            marcaEncontrada = true;
+
             texto += "CodPasillo: " + intAString(temp->codPasillo) +
-                     "\nCodProducto: " + intAString(temp->codProducto) +
-                     "\nCodMarca: " + intAString(temp->codMarca) +
-                     "\nNombre: " + temp->nombre +
-                     "\nCantGondola: " + intAString(temp->cantGondola) +
-                     "\nPrecio: " + intAString(temp->precio) + "\n\n";
+                    "\nCodProducto: " + intAString(temp->codProducto) +
+                    "\nCodMarca: " + intAString(temp->codMarca) +
+                    "\nNombre: " + temp->nombre +
+                    "\nCantGondola: " + intAString(temp->cantGondola) +
+                    "\nPrecio: " + intAString(temp->precio) +
+					"\n--------------------------\n";
         }
 
         temp = temp->anterior;
     } while (temp != primero->anterior);
 
-    if (encontrado)
+    if (marcaEncontrada)
     {
         cout << "\nReporte: " << nombreReporte << endl << endl;
         cout << texto; // Muestra en consola
@@ -2869,7 +2880,7 @@ void HashingClientes::reporteClientes()
     bool listasVacias = true;
 
 	// Itera sobre cada posición de la tabla de hashing
-    for (int i = 0; i < 13; ++i)
+    for (int i = 0; i < 13; i++)
 	{
         pnodoCte temp = tablaHash[i];
         
@@ -2879,10 +2890,11 @@ void HashingClientes::reporteClientes()
 
             // Imprime los clientes de esta posición en la tabla
             texto += "Cedula: " + intAString(temp->cedula) +
-            		 "\nNombre: " + temp->nombre +
-                     "\nCodCiudad: " + intAString(temp->codCiudad) +
-					 "\nTelefono: " + temp->telefono +
-					 "\nCorreo: " + temp->correo + "\n\n";
+            		"\nNombre: " + temp->nombre +
+                    "\nCodCiudad: " + intAString(temp->codCiudad) +
+					"\nTelefono: " + temp->telefono +
+					"\nCorreo: " + temp->correo +
+					"\n--------------------------\n";
 
             temp = temp->siguiente;
         }
@@ -2905,7 +2917,7 @@ void HashingAdmins::reporteAdmins()
     bool listasVacias = true;
 
 	// Itera sobre cada posición de la tabla de hashing
-    for (int i = 0; i < 13; ++i)
+    for (int i = 0; i < 13; i++)
 	{
         pnodoAdmin temp = tablaHash[i];
         
@@ -2915,10 +2927,11 @@ void HashingAdmins::reporteAdmins()
 
             // Imprime los clientes de esta posición en la tabla
             texto += "Cedula: " + intAString(temp->cedula) +
-            		 "\nNombre: " + temp->nombre +
-                     "\nCodCiudad: " + intAString(temp->codCiudad) +
-					 "\nTelefono: " + temp->telefono +
-					 "\nCorreo: " + temp->correo + "\n\n";
+            		"\nNombre: " + temp->nombre +
+                    "\nCodCiudad: " + intAString(temp->codCiudad) +
+					"\nTelefono: " + temp->telefono +
+					"\nCorreo: " + temp->correo +
+					"\n--------------------------\n";
 
             temp = temp->siguiente;
         }
@@ -2939,25 +2952,24 @@ void ListaCircularCiudades::reporteCiudades()
 	string nombreReporte = "Ciudades";
     string texto = "";
 
-    // Itera sobre la lista de ciudades y guarda en el archivo
     pnodoCiudad temp = primero;
-    bool listaVacia = true;
 
+	// Itera sobre la lista de ciudades y guarda en el archivo
 	if (temp != NULL)
     {
-    	listaVacia = false;
         pnodoCiudad inicio = temp;
 
         do
         {
             texto += "CodCiudad: " + intAString(temp->codCiudad) +
-                     "\nNombre: " + temp->nombre + "\n\n";
+                    "\nNombre: " + temp->nombre +
+					"\n--------------------------\n";
 
             temp = temp->siguiente;
         } while (temp != inicio);
     }
 
-    if (!listaVacia)
+    if (!ListaVacia())
     {
 	    cout << "Reporte: " << nombreReporte << endl << endl;
 	    cout << texto; // Imprime en consola
@@ -2969,7 +2981,7 @@ void ListaCircularCiudades::reporteCiudades()
 
 void ListaSimplePas::reportePasilloMasVisitado()
 {
-    string nombreReporte = "Pasillo mas visitado";
+    string nombreReporte = "Pasillo(s) mas visitado(s)";
     string texto = "";
 
     pnodoPasillo temp = primero;
@@ -2984,29 +2996,23 @@ void ListaSimplePas::reportePasilloMasVisitado()
         temp = temp->siguiente;
     }
 
-    // Agrega al texto los pasillos más visitados
     temp = primero;
-    bool pasilloMasVisitado = false;
 
+    // Agrega al texto los pasillos más visitados
     while (temp != NULL)
 	{
         if (temp->contVisitas == maxVisitas)
 		{
-            if (!pasilloMasVisitado)
-			{
-                texto += "Pasillo(s) mas visitado(s):\n";
-                pasilloMasVisitado = true;
-            }
-
             texto += "CodPasillo: " + intAString(temp->codPasillo) +
                     "\nNombre: " + temp->nombre +
-                    "\nCantidad de visitas: " + intAString(temp->contVisitas) + "\n\n";
+                    "\nCantidad de visitas: " + intAString(temp->contVisitas) +
+					"\n--------------------------\n";
         }
 
         temp = temp->siguiente;
     }
 
-    if (pasilloMasVisitado && maxVisitas > 0)
+    if (maxVisitas > 0)
 	{
         cout << "Reporte: " << nombreReporte << endl << endl;
         cout << texto; // Imprime en consola
@@ -3023,39 +3029,36 @@ void ListaSimplePas::reportePasilloMenosVisitado()
 
     pnodoPasillo temp = primero;
     int minVisitas = 1;
-    bool pasilloMenosVisitado = false;
 
     // Encuentra el número mínimo de visitas
     while (temp != NULL)
 	{
         if (temp->contVisitas >= 1)
 		{
-            if (!pasilloMenosVisitado || (temp->contVisitas < minVisitas))
-			{
+            if (temp->contVisitas < minVisitas)
                 minVisitas = temp->contVisitas;
-                pasilloMenosVisitado = true;
-            }
         }
+
         temp = temp->siguiente;
     }
 
-    // Agrega al texto los pasillos menos visitados
     temp = primero;
 
+	// Agrega al texto los pasillos menos visitados
     while (temp != NULL)
 	{
         if (temp->contVisitas == minVisitas)
 		{
-            texto += "Pasillo(s) menos visitado(s):\n";
             texto += "CodPasillo: " + intAString(temp->codPasillo) +
                     "\nNombre: " + temp->nombre +
-                    "\nCantidad de visitas: " + intAString(temp->contVisitas) + "\n\n";
+                    "\nCantidad de visitas: " + intAString(temp->contVisitas) +
+					"\n--------------------------\n";
         }
 
         temp = temp->siguiente;
     }
 
-    if (pasilloMenosVisitado)
+    if (minVisitas >= 1)
 	{
         cout << "Reporte: " << nombreReporte << endl << endl;
         cout << texto; // Imprime en consola
@@ -3063,6 +3066,97 @@ void ListaSimplePas::reportePasilloMenosVisitado()
     }
 	else
         cout << "No hay pasillos menos visitados.\n" << endl;
+}
+
+void ListaDobleProPasillos::reporteProductoMasBuscado(ListaSimplePas& listaPasillos)
+{
+    string nombreReporte = "Producto(s) mas buscado(s)";
+    string texto = "";
+
+    pnodoProPasillo temp = primero;
+    int maxBusquedas = 0;
+
+    // Encuentra el número máximo de búsquedas
+    while (temp != NULL)
+	{
+        if (temp->contBusquedas > maxBusquedas)
+            maxBusquedas = temp->contBusquedas;
+
+        temp = temp->siguiente;
+    }
+
+    temp = primero;
+
+	// Agrega al texto los productos más buscados
+    while (temp != NULL)
+	{
+        if (temp->contBusquedas == maxBusquedas)
+		{
+            texto += "Pasillo: " + intAString(temp->codPasillo) + "; " +
+					listaPasillos.buscarPasillo(temp->codPasillo)->getNombre() +
+            		"\nProducto: " + intAString(temp->codProducto) + "; " + temp->nombre +
+                    "\nCantidad de busquedas: " + intAString(temp->contBusquedas) +
+					"\n--------------------------\n";
+        }
+
+        temp = temp->siguiente;
+    }
+
+    if (maxBusquedas > 0)
+	{
+        cout << "Reporte: " << nombreReporte << endl << endl;
+        cout << texto; // Imprime en consola
+        crearReporte(nombreReporte, "", texto); // Escribe en el archivo
+    }
+    else
+        cout << "No hay productos mas buscados.\n" << endl;
+}
+
+void ListaCircularDMarcasProductos::reporteMarcasMasBuscadas(ListaSimplePas& listaPasillos,
+	ListaDobleProPasillos& listaProductos)
+{
+    string nombreReporte = "Marca(s) mas buscada(s)";
+    string texto = "";
+
+    pnodoMarcaProducto temp = primero;
+    int maxBusquedas = 0;
+
+    // Encuentra el número máximo de búsquedas
+    do
+	{
+        if (temp->contBusquedas > maxBusquedas)
+            maxBusquedas = temp->contBusquedas;
+
+        temp = temp->siguiente;
+    } while (temp != primero);
+
+    temp = primero;
+
+    // Agrega al texto las marcas más buscadas
+    do
+	{
+        if (temp->contBusquedas == maxBusquedas)
+		{
+            texto += "Pasillo: " + intAString(temp->codPasillo) + "; " +
+					listaPasillos.buscarPasillo(temp->codPasillo)->getNombre() +
+            		"\nProducto: " + intAString(temp->codProducto) + "; " +
+					listaProductos.buscarProPasillo(temp->codProducto)->getNombre() +
+                    "\nMarca: " + intAString(temp->codMarca) + "; " + temp->nombre +
+                    "\nCantidad de busquedas: " + intAString(temp->contBusquedas) +
+					"\n--------------------------\n";
+        }
+
+        temp = temp->siguiente;
+    } while (temp != primero);
+
+    if (maxBusquedas > 0)
+	{
+        cout << "Reporte: " << nombreReporte << endl << endl;
+        cout << texto; // Imprime en consola
+        crearReporte(nombreReporte, "", texto); // Escribe en el archivo
+    }
+	else
+        cout << "No hay marcas mas buscadas.\n" << endl;
 }
 
 
@@ -4019,9 +4113,15 @@ void menuReportesAdmins(int opcion, ListaSimplePas& listaPasillos, ListaDoblePro
             	listaPasillos.reportePasilloMenosVisitado();
 				break;
 				
-			case 9: break;
+			case 9:
+				system("cls");
+				listaProductos.reporteProductoMasBuscado(listaPasillos);
+				break;
 			
-			case 10: break;
+			case 10:
+				system("cls");
+				listaMarcasProductos.reporteMarcasMasBuscadas(listaPasillos, listaProductos);
+				break;
             
             case 11:
 				system("cls");
