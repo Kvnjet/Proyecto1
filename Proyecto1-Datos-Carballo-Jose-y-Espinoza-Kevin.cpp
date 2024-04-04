@@ -3124,7 +3124,7 @@ void ListaSimplePasillos::reportePasilloMasVisitado()
 
 void ListaSimplePasillos::reportePasilloMenosVisitado()
 {
-    string nombreReporte = "Pasillo menos visitado";
+    string nombreReporte = "Pasillo(s) menos visitado(s)";
     string texto = "";
 
     pnodoPasillo temp = primero;
