@@ -1,3 +1,14 @@
 1256;Turrialba
 2907389;Tres Rios
 23451;San Jose
+2345;Upala
+54321;Nicoya
+87654;Guapiles
+98765;Moravia
+22907389;Liberia
+67890;Esparza
+8765;Canalete
+1256;Desamparados
+8592;San Carlos
+23451;Los Chiles
+56789;Naranjo

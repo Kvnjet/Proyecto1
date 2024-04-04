@@ -4,3 +4,17 @@
 15;28;Jugos
 4;73;Jamones
 01;20;Sal
+08;28;Uvas
+12;16;Galletas
+06;76;Balones
+18;31;Licuadoras
+12;46;Pasteles
+02;23;Quesos
+19;18;Rompecabezas
+06;08;Pesas
+32;30;Sardinas
+09;75;Correas
+07;29;Helados
+14;34;Pijamas
+13;66;Alicate
+08;45;Manzanas
